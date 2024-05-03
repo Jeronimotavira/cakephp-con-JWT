@@ -1,0 +1,31 @@
+version: '3.9'
+services:
+  cakephp:
+    networks:
+      - redcake
+    container_name: ${APACHE_CNAME}  
+    volumes:
+      - ./cakephp:/var/www/
+    env_file:
+      - .env
+    ports:
+      - '8080:80'  
+    build: httpd_install/.
+    image: apache_php
+
+  postgres:
+    image: postgres
+    container_name: ${POSTGRES_CNAME}
+    restart: always
+    ports:
+      - '5432:5432' 
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DBNAME}
+    networks:
+      - redcake
+
+networks:
+  redcake:
+    driver: bridge
