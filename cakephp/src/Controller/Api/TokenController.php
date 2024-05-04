@@ -4,19 +4,30 @@ declare(strict_types=1);
 namespace App\Controller\Api;
 use App\Controller\AppController;
 use Firebase\JWT\JWT;
+use Cake\View\JsonView;
+use Cake\View\XmlView;
 
 class TokenController extends AppController
 {
+    public function initialize(): void
+    {
+        parent::initialize();
+        $this->viewBuilder()->setClassName('Json');
+    
+        
+    }
     public function beforeFilter(\Cake\Event\EventInterface $event){
         parent::beforeFilter($event);
         // Configure the login action to not require authentication, preventing
         // the infinite redirect loop issue
-        $this->Authentication->addUnauthenticatedActions(['login']);
+        $this->Authentication->addUnauthenticatedActions(['login','index']);
     }
 
     public function index()
     {
-        $result = $this->Authentication->getResult();
+        $this->viewBuilder()->setClassName("Json");
+    /*     $result = $this->Authentication->getResult();
+
         if($result->isValid()){
             $user = $result->getData();
         }else{
@@ -24,11 +35,11 @@ class TokenController extends AppController
             $user = [
                 'message' => 'invalid user'
             ];
-        }
+        } */
+        $user = 'hola mundo';
 
         $this->set('user', $user);
-        $this->viewBuilder()->setClassName("Json");
-        $this->viewBuilder()->setOption('serialize', 'users');
+        $this->viewBuilder()->setOption('serialize', 'user');
     }
 
     public function login()
@@ -47,7 +58,7 @@ class TokenController extends AppController
             ];
         } else {
             $this->response = $this->response->withStatus(401);
-            $json = [];
+            $json = $this->request->getData();
         }
    
         $this->viewBuilder()->setClassName("Json");

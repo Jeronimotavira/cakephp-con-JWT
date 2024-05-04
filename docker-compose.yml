@@ -1,6 +1,6 @@
 version: '3.9'
 services:
-  cakephp:
+  cakephp4:
     networks:
       - redcake
     container_name: ${APACHE_CNAME}  
@@ -13,7 +13,7 @@ services:
     build: httpd_install/.
     image: apache_php
 
-  postgres:
+  postgrescake4:
     image: postgres
     container_name: ${POSTGRES_CNAME}
     restart: always

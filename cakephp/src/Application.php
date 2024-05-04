@@ -22,6 +22,13 @@ use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Routing\Router;
 use Psr\Http\Message\ServerRequestInterface;
 
+
+use Authorization\AuthorizationService;
+use Authorization\AuthorizationServiceInterface;
+use Authorization\AuthorizationServiceProviderInterface;
+use Authorization\Middleware\AuthorizationMiddleware;
+use Authorization\Policy\OrmResolver;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -44,7 +51,9 @@ use Psr\Http\Message\ServerRequestInterface;
  * This defines the bootstrapping logic and middleware layers you
  * want to use in your application.
  */
-class Application extends BaseApplication  implements AuthenticationServiceProviderInterface
+class Application extends BaseApplication
+    implements AuthenticationServiceProviderInterface,
+    AuthorizationServiceProviderInterface
 {
     /**
      * Load all the application configuration and bootstrap logic.
@@ -55,6 +64,7 @@ class Application extends BaseApplication  implements AuthenticationServiceProvi
     {
         // Call parent to load bootstrap from files.
         parent::bootstrap();
+        $this->addPlugin('Authentication');
 
         if (PHP_SAPI === 'cli') {
             $this->bootstrapCli();
@@ -94,13 +104,16 @@ class Application extends BaseApplication  implements AuthenticationServiceProvi
             ->add(new AssetMiddleware([
                 'cacheTime' => Configure::read('Asset.cacheTime'),
             ]))
+
 /*             ->add(new CsrfProtectionMiddleware([
                 'httponly' => true,
-            ])) */
+            ]))  */
+
             ->add(new RoutingMiddleware($this))
             ->add(new BodyParserMiddleware())
             // Add the AuthenticationMiddleware. It should be after routing and body parser.
             ->add(new AuthenticationMiddleware($this));
+           // ->add(new AuthorizationMiddleware($this));
 
             // Cross Site Request Forgery (CSRF) Protection Middleware
             // https://book.cakephp.org/4/en/security/csrf.html#cross-site-request-forgery-csrf-middleware
@@ -120,52 +133,60 @@ class Application extends BaseApplication  implements AuthenticationServiceProvi
 
     public function getAuthenticationService(ServerRequestInterface $request): AuthenticationServiceInterface
     {
- /*        $authenticationService = new AuthenticationService([
-            'unauthenticatedRedirect' => Router::url('/users/login'),
+        
+        $service = new AuthenticationService([
+            'unauthenticatedRedirect' => '/users/login',
             'queryParam' => 'redirect',
-        ]); */
+        ]);
+  
+    
+        $service->loadIdentifier('Authentication.Password', [
+            'fields' => [
+                'username' => 'username',
+                'password' => 'password',
+            ]
+        ]);
 
-        $service = new AuthenticationService();
-        // ...
      
-
-        if ($request->getParam('prefix') == 'Api') {
-
+        $service->loadAuthenticator('Authentication.Session');
+        // Configure form data check to pick email and password
+        $service->loadAuthenticator('Authentication.Form', [
+            'fields' => [
+                'username' => 'username',
+                'password' => 'password',
+            ],
+            'loginUrl' => '/users/login',
+        ]);
+        return  $service;
+       
+     /*     if ($request->getParam('prefix') == 'Api') {
+        
+            // ...
             $service->loadIdentifier('Authentication.JwtSubject');
             $service->loadAuthenticator('Authentication.Jwt', [
                 'secretKey' => file_get_contents(CONFIG . '/jwt.pem'),
                 'algorithm' => 'RS256',
                 'returnPayload' => false
             ]);
+           
         } else {
-            // Web UI specific authenticators.
-            // Load identifiers, ensure we check username and password fields
-            $service->loadIdentifier('Authentication.Password', [
-                    'fields' => [
-                        'username' => 'username',
-                        'password' => 'password',
-                    ],
-                ]);
+        
 
-                // Load the authenticators, you want session first
-            $service->loadAuthenticator('Authentication.Session');
-                // Configure form data check to pick username and password
-            $service->loadAuthenticator('Authentication.Form', [
-                    'fields' => [
-                        'username' => 'username',
-                        'password' => 'password',
-                    ],
-                    'loginUrl' => Router::url('/users/login'),
-                ]);
-        }
+        } */
+ 
+        
     
-        return $service;
-
-
-
-
-        return$service;
+       
     }
+
+    public function getAuthorizationService(ServerRequestInterface $request): AuthorizationServiceInterface
+    {
+      
+        $resolver = new OrmResolver();
+
+      return new AuthorizationService($resolver);
+
+    }   
     /**
      * Register application container services.
      *

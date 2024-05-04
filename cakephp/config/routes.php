@@ -109,12 +109,18 @@ return function (RouteBuilder $routes): void {
         $builder->connect('/{controller}/{action}/*', ['prefix'=>'api']);
        // $builder->connect('/{controller}/{action}/*', []);
     }); */
+
+
     $routes->prefix('Api', function (RouteBuilder $routes) {
-        // Because you are in the admin scope,
-        // you do not need to include the /admin prefix
-        // or the Admin route element.
-        $routes->setExtensions(['json']); 
-        $routes->connect('/{controller}');
-        $routes->connect('/{controller}/{action}');
+            // Because you are in the admin scope,
+            // you do not need to include the /admin prefix
+            // or the Admin route element.
+            $routes->setExtensions(['json']); 
+            $routes->connect('/:controller/:action/*', [], ['routeClass' => DashedRoute::class, 'pass' => ['controller', 'action']]);
+            $routes->fallbacks(DashedRoute::class);
+          
+           
     });
+
+  
 };
