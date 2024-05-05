@@ -183,6 +183,8 @@ return [
      *   should be ignored in. Use this to ignore deprecations for plugins or parts of
      *   your application that still emit deprecations.
      */
+
+
     'Error' => [
         'errorLevel' => E_ALL,
         'skipLog' => [],

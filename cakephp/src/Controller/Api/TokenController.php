@@ -20,22 +20,13 @@ class TokenController extends AppController
         parent::beforeFilter($event);
         // Configure the login action to not require authentication, preventing
         // the infinite redirect loop issue
-        $this->Authentication->addUnauthenticatedActions(['login','index']);
+        $this->Authentication->addUnauthenticatedActions(['login']);
     }
 
     public function index()
     {
-        $this->viewBuilder()->setClassName("Json");
-    /*     $result = $this->Authentication->getResult();
+       // $this->viewBuilder()->setClassName("Json");
 
-        if($result->isValid()){
-            $user = $result->getData();
-        }else{
-            $this->response = $this->response->withStatus(401);
-            $user = [
-                'message' => 'invalid user'
-            ];
-        } */
         $user = 'hola mundo';
 
         $this->set('user', $user);
@@ -64,10 +55,19 @@ class TokenController extends AppController
             $json = $this->request->getData();
         }
    
-        $this->viewBuilder()->setClassName("Json");
+       // $this->viewBuilder()->setClassName("Json");
         $this->set('json', $json);
         $this->viewBuilder()->setOption('serialize', ['json']);
        
+    }
+    public function hey()
+    {
+       // $this->viewBuilder()->setClassName("Json");
+       
+        $user = 'hola mundo';
+
+        $this->set('user', $user);
+        $this->viewBuilder()->setOption('serialize', 'user');
     }
 
 }

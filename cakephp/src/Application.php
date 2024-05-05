@@ -134,22 +134,25 @@ class Application extends BaseApplication
     public function getAuthenticationService(ServerRequestInterface $request): AuthenticationServiceInterface
     {
         
-        $service = new AuthenticationService([
+      /*   $service = new AuthenticationService([
             'unauthenticatedRedirect' => '/users/login',
             'queryParam' => 'redirect',
         ]);
-  
+   */
+
+        $service = new AuthenticationService();
+
         $fielSeting = [
-            'fields' => [
                 'username' => 'username',
                 'password' => 'password',
-            ],
-            
         ];
-        $service->loadAuthenticator('Authentication.Form', $fielSeting);
-        $service->loadIdentifier('Authentication.Password', $fielSeting);
 
-        
+        $service->loadIdentifier('Authentication.Password', 
+        ['fields'=>$fielSeting,
+         'returnPayload'=>false]);
+         
+        $service->loadAuthenticator('Authentication.Form',  ['fields'=>$fielSeting]);
+       
        
         if ($request->getParam('prefix') == 'Api') {
         
@@ -162,7 +165,7 @@ class Application extends BaseApplication
             ]);
            
         } else {
-        
+                      
             $service->loadAuthenticator('Authentication.Session');
 
         } 
