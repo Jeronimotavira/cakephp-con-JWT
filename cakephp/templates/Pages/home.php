@@ -234,6 +234,7459 @@ endif;
                 </div>
             </div>
         </div>
+        
     </main>
 </body>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        Error: Missing Database Connection </title>
+    <link href="/favicon.ico" type="image/x-icon" rel="icon">
+    <link href="/favicon.ico" type="image/x-icon" rel="shortcut icon">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --typeface: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            --typeface-mono: consolas, monospace;
+
+            --border-radius: 5px;
+            --layout-padding: 30px;
+            --layout-vertical-gap: 20px;
+
+            --color-vendor-frame: #7c7c7c;
+
+            --breakpoint-tablet: 810px;
+        }
+
+        /* Smaller viewport variations */
+        @media (max-width: 810px) {
+            :root {
+                --layout-padding: 20px;
+            }
+        }
+
+        body {
+            font-family: var(--typeface);
+            color: #404041;
+            background: #F5F7FA;
+            font-size: 14px;
+            letter-spacing: .01em;
+            line-height: 1.6;
+            padding: 0 0 40px;
+            margin: 0;
+            height: 100%;
+        }
+
+        header {
+            flex: 1;
+            background-color: #D33C47;
+            color: #ffffff;
+            padding: var(--layout-padding);
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            font-size: 30px;
+            margin: 0;
+        }
+
+        .header-title a {
+            font-size: 18px;
+            cursor: pointer;
+            margin-left: 10px;
+            user-select: none;
+        }
+
+        .header-title code {
+            margin: 0 10px;
+        }
+
+        .header-description {
+            display: block;
+            font-size: 18px;
+            line-height: 1.2;
+            margin-bottom: var(--layout-vertical-gap);
+        }
+
+        .header-type {
+            display: block;
+            font-size: 16px;
+        }
+
+        .header-help a {
+            color: #fff;
+        }
+
+        .error-content {
+            padding: var(--layout-padding);
+        }
+
+        .code-dump,
+        pre {
+            background: #fff;
+            border-radius: var(--border-radius);
+            padding: 5px;
+            white-space: pre-wrap;
+            margin: 0;
+        }
+
+        .error,
+        .error-subheading {
+            border-radius: var(--border-radius);
+            font-size: 18px;
+            margin-top: 0;
+            padding: var(--layout-vertical-gap) 16px;
+        }
+
+        .error-subheading {
+            color: #fff;
+            background-color: #319795;
+        }
+
+        .error-subheading strong {
+            color: #fff;
+            background-color: #4fd1c5;
+            border-radius: 9999px;
+            padding: 4px 12px;
+            margin-right: 8px;
+        }
+
+        .error {
+            color: #fff;
+            background: #2779BD;
+        }
+
+        .error strong {
+            color: #fff;
+            background-color: #6CB2EB;
+            border-radius: 9999px;
+            padding: 4px 12px;
+            margin-right: 8px;
+        }
+
+        .stack-trace {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Previous exception blocks */
+        .stack-exception-header {
+            margin: 36px 0 12px 8px;
+        }
+
+        .stack-exception-caused {
+            font-size: 1.6em;
+            display: block;
+            margin-bottom: var(--layout-vertical-gap);
+        }
+
+        .stack-exception-type {
+            display: block;
+            font-family: var(--typeface-mono);
+        }
+
+        .stack-exception-message {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .stack-frames {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            border-radius: var(--border-radius);
+        }
+
+        .stack-frame {
+            padding: 10px;
+            background: #eaeaea;
+            padding: 10px;
+            border-bottom: 2px solid #f5f7fa;
+            overflow: hidden;
+        }
+
+        .vendor-frame {
+            background: #f1f1f1;
+        }
+
+        .stack-frame:first-child {
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        .stack-frame:last-child {
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .stack-frame a {
+            color: #212121;
+            text-decoration: none;
+        }
+
+        .stack-frame.active {
+            background: #F5F7FA;
+        }
+
+        .stack-frame a:hover {
+            text-decoration: underline;
+        }
+
+        /* Stack frame headers */
+        .stack-frame-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stack-frame-header-content {
+            display: flex;
+            gap: 8px;
+        }
+
+        .vendor-frame .stack-frame-header-content,
+        .vendor-frame .stack-frame-header-content a {
+            color: var(--color-vendor-frame);
+        }
+
+        @media (max-width: 810px) {
+            .stack-frame-header-content {
+                flex-direction: column;
+            }
+        }
+
+        .stack-function,
+        .stack-frame-file,
+        .stack-frame-line,
+        .stack-file {
+            font-family: var(--typeface-mono);
+        }
+
+        .stack-file {
+            font-size: 0.9em;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            direction: rtl;
+        }
+
+        .stack-frame-file {
+            word-break: break-all;
+        }
+
+        .stack-frame-label {
+            font-family: var(--typeface);
+            font-weight: normal;
+            margin: 0 5px 0 0;
+            font-size: 0.9em;
+        }
+
+        .stack-function .stack-frame-label {
+            margin: 0;
+        }
+
+        .stack-frame-edit {
+            margin: 0 5px 0 0;
+        }
+
+        .stack-frame-toggle {
+            cursor: pointer;
+            color: #525252;
+            border: 1px solid #d2d2d2;
+            border-radius: var(--border-radius);
+            height: 28px;
+            width: 28px;
+            background: #F5F7FA;
+            line-height: 1.5;
+        }
+
+        .stack-frame-toggle.active {
+            transform: rotate(180deg);
+        }
+
+        .stack-frame-header .stack-frame-toggle {
+            opacity: 0.7;
+        }
+
+        .stack-frame-args {
+            display: block;
+            margin: 10px 0 0 0;
+        }
+
+        .stack-frame-args:hover {
+            color: #D33C47;
+        }
+
+        .stack-args h4 {
+            margin-top: 0;
+        }
+
+        /* Suggestion and help context */
+        .error-suggestion {
+            margin-bottom: var(--layout-vertical-gap);
+        }
+
+        /* Code excerpts */
+        .code-excerpt {
+            width: 100%;
+            margin: 10px 0 0 0;
+            background: #fefefe;
+        }
+
+        .code-highlight {
+            display: block;
+            background: #fff59d;
+            padding-left: 4px;
+        }
+
+        .excerpt-line {
+            padding: 0;
+        }
+
+        /* php 8.3 adds pre around highlighted code */
+        .code-highlight>pre,
+        .excerpt-line>pre {
+            padding: 0;
+            background: none;
+        }
+
+        .excerpt-line>code {
+            padding-left: 4px;
+        }
+
+        .excerpt-number {
+            background: #f6f6f6;
+            width: 50px;
+            text-align: right;
+            color: #666;
+            border-right: 1px solid #ddd;
+            padding: 2px 4px;
+        }
+
+        .excerpt-number:after {
+            content: attr(data-number);
+        }
+
+        table {
+            text-align: left;
+        }
+
+        th,
+        td {
+            padding: 4px;
+        }
+
+        th {
+            border-bottom: 1px solid #ccc;
+        }
+
+        .cake-debug {
+            margin-top: 10px;
+        }
+    </style>
+    <style type="text/css">
+        .cake-debug {
+            --color-bg: #ECECE9;
+            --color-highlight-bg: #fcf8e3;
+            --color-control-bg: hsla(0, 0%, 50%, 0.2);
+
+            --color-orange: #c44f24;
+            --color-green: #0b6125;
+            --color-violet: #a71d5d;
+            --color-blue: #4070a0;
+            --color-grey: #5f5f5f;
+
+            --color-dark-grey: #222;
+            --color-cyan: #234aa0;
+            --color-red: #d33c44;
+
+            --indent: 20px;
+
+            font-family: monospace;
+            background: var(--color-bg);
+            padding: 5px;
+            line-height: 16px;
+            font-size: 14px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .cake-debug:last-child {
+            margin-bottom: 0;
+        }
+
+        .cake-debug>span {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--color-dark-grey);
+        }
+
+        .cake-dbg-object {
+            display: inline;
+        }
+
+        .cake-dbg-object[data-highlighted=true],
+        .cake-dbg-object[data-highlighted=true] samp {
+            background: var(--color-highlight-bg);
+        }
+
+        /*
+Array item container and each items are blocks so
+nesting works.
+*/
+        .cake-dbg-object-props,
+        .cake-dbg-array-items {
+            display: block;
+        }
+
+        .cake-dbg-prop,
+        .cake-dbg-array-item {
+            display: block;
+            padding-left: var(--indent);
+            min-height: 18px;
+        }
+
+        /** Collapser buttons **/
+        [data-hidden=true] {
+            display: none;
+        }
+
+        .cake-dbg-collapse {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            vertical-align: middle;
+            border-radius: 3px;
+            color: var(--color-blue);
+
+            background: var(--color-control-bg);
+            /* Image is an rawurlencoded SVG */
+            background-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20height%3D%2212%22%20width%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%3E%3Cpolygon%20points%3D%223%2C1%203%2C11%208%2C6%22 style%3D%22fill%3A%234070a0%3B%22%2F%3E%3C%2Fsvg%3E");
+            background-position: 2px 1px;
+            background-repeat: no-repeat;
+        }
+
+        .cake-dbg-collapse[data-open=true] {
+            transform: rotate(90deg);
+        }
+
+        /* Copy button */
+        .cake-dbg-copy {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            padding: 6px;
+            background: var(--color-control-bg);
+            color: var(--color-blue);
+            border-radius: 0 0 0 3px;
+        }
+
+        /* Textual elements */
+        .cake-dbg-class {
+            color: var(--color-cyan);
+        }
+
+        .cake-dbg-property {
+            color: var(--color-dark-grey);
+        }
+
+        .cake-dbg-visibility {
+            color: var(--color-violet);
+        }
+
+        .cake-dbg-punct {
+            color: var(--color-grey);
+        }
+
+        .cake-dbg-string {
+            color: var(--color-green);
+            white-space: pre-wrap;
+        }
+
+        .cake-dbg-number {
+            font-weight: bold;
+            color: var(--color-blue);
+        }
+
+        .cake-dbg-const {
+            color: var(--color-yellow);
+            font-weight: bold;
+        }
+
+        .cake-dbg-ref {
+            color: var(--color-red);
+        }
+
+        .cake-dbg-special {
+            color: var(--color-red);
+            font-style: italic;
+        }
+    </style>
+    <script type="text/javascript">
+        (function (win, doc) {
+
+function initialize() {
+  createCollapsibles(doc.querySelectorAll('.cake-dbg-array-items'));
+  createCollapsibles(doc.querySelectorAll('.cake-dbg-object-props'));
+  attachRefEvents(doc.querySelectorAll('.cake-dbg'));
+  openBlocks(doc.querySelectorAll('.cake-debug[data-open-all="true"]'));
+  attachCopyButton(doc.querySelectorAll('.cake-dbg'));
+}
+// Add a name on window so DebugKit can add controls to dump blocks
+win.__cakeDebugBlockInit = initialize;
+
+/**
+ * Open all the collapsed sections in a block.
+ */
+function openBlocks(blocks) {
+  blocks.forEach(function (block) {
+    block.querySelectorAll('.cake-dbg-collapse[data-open="false"]').forEach(function (el) {
+      el.click();
+    });
+  });
+}
+
+/**
+ * Create collapse toggles and attach events
+ */
+function createCollapsibles(nodes) {
+  nodes.forEach(function (node) {
+    // Hide the childnode container if it is not
+    // a direct parent of the container.
+    if (!node.parentNode.parentNode.classList.contains('cake-dbg')) {
+      node.dataset.hidden = true;
+    }
+
+    // Don't show toggles for empty arrays/objects
+    if (node.childNodes.length == 0) {
+      return;
+    }
+
+    var collapser = doc.createElement('a');
+    collapser.classList.add('cake-dbg-collapse');
+    collapser.dataset.open = !node.dataset.hidden;
+    collapser.setAttribute('href', '#')
+    collapser.setAttribute('title', 'Toggle items');
+
+    // Add open/close behavior
+    collapser.addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      node.dataset.hidden = node.dataset.hidden === 'true' ? 'false' : 'true';
+      collapser.dataset.open = collapser.dataset.open === 'true' ? 'false' : 'true';
+    });
+
+    node.parentNode.insertBefore(collapser, node);
+  });
+}
+
+/**
+ * When ref links are clicked open the path to that
+ * element and highlight the reference
+ */
+function attachRefEvents(nodes) {
+  nodes.forEach(function (container) {
+    var refLinks = container.querySelectorAll('.cake-dbg-ref');
+    refLinks.forEach(function (ref) {
+      ref.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        var target = document.getElementById(ref.getAttribute('href').substr(1));
+        openPath(container, target);
+      });
+    });
+  });
+}
+
+function openPath(container, target) {
+  // Open the target element
+  var expander = target.querySelector('.cake-dbg-collapse');
+  if (expander.dataset.open === 'false') {
+    expander.click();
+  }
+  container.querySelectorAll('.cake-dbg-object').forEach(function (el) {
+    el.dataset.highlighted = 'false';
+  })
+  target.dataset.highlighted = 'true';
+
+  var current = target;
+  // Traverse up the tree opening all closed containers.
+  while (true) {
+    var parent = current.parentNode;
+    if (parent == container) {
+      break;
+    }
+    if (parent.classList.contains('cake-dbg-object') || parent.classList.contains('cake-dbg-array')) {
+      expander = parent.querySelector('.cake-dbg-collapse');
+      if (expander.dataset.open === 'false') {
+        expander.click();
+      }
+    }
+    current = parent;
+  }
+}
+
+// https://www.30secondsofcode.org/js/s/copy-to-clipboard
+function copyToClipboard (str) {
+  var el = document.createElement('textarea');
+  el.value = str;
+  el.setAttribute('readonly', '');
+  el.style.position = 'absolute';
+  el.style.left = '-9999px';
+  document.body.appendChild(el);
+  var selected = document.getSelection().rangeCount > 0 ? document.getSelection().getRangeAt(0) : false;
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+  if (selected) {
+    document.getSelection().removeAllRanges();
+    document.getSelection().addRange(selected);
+  }
+}
+
+function attachCopyButton(nodes) {
+  nodes.forEach(function (container) {
+    var copy = doc.createElement('a');
+    copy.classList.add('cake-dbg-copy');
+    copy.setAttribute('href', '#');
+    copy.setAttribute('title', 'Copy contents of debug output');
+    copy.appendChild(doc.createTextNode('Copy'));
+
+    // Add copy behavior
+    copy.addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      var lineNo = '';
+      if (container.parentNode && container.parentNode.classList.contains('cake-debug')) {
+        var line = container.parentNode.querySelector('span');
+        lineNo = line.textContent + "\n";
+      }
+
+      // Chop off last 4 to exclude copy button text.
+      copyToClipboard(lineNo + container.textContent.substring(0, container.textContent.length - 4));
+    });
+
+    container.appendChild(copy);
+  });
+}
+
+doc.addEventListener('DOMContentLoaded', initialize);
+}(window, document))
+    </script>
+</head>
+
+<body>
+    <header>
+        <h1 class="header-title">
+            <span>Missing Database Connection</span>
+            <a>&#128203</a>
+        </h1>
+        <span class="header-type">Cake\Database\Exception\MissingConnectionException</span>
+    </header>
+    <div class="error-content">
+        <p class="error-subheading">
+            Connection to Postgres could not be established: SQLSTATE[08006] [7] could not translate host name
+            &quot;postgres&quot; to address: Name or service not known </p>
+
+
+
+        <div class="stack-frame">
+            <span class="stack-frame-file">
+            CORE/src/Database/Driver.php at line 144        </span>
+            <a href="phpstorm://open?file=/var/www/vendor/cakephp/cakephp/src/Database/Driver.php&amp;line=144"
+                class="stack-frame-edit">(edit)</a>
+            <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td class="excerpt-number" data-number="140"></td>
+                    <td class="excerpt-line">
+                        <pre><code style="color: #000000"><span style="color: #0000BB">        $retry </span><span style="color: #007700">= new </span><span style="color: #0000BB">CommandRetry</span><span style="color: #007700">(new </span><span style="color: #0000BB">ErrorCodeWaitStrategy</span><span style="color: #007700">(static::</span><span style="color: #0000BB">RETRY_ERROR_CODES</span><span style="color: #007700">, </span><span style="color: #0000BB">5</span><span style="color: #007700">), </span><span style="color: #0000BB">4</span><span style="color: #007700">);</span></code></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="excerpt-number" data-number="141"></td>
+                    <td class="excerpt-line">
+                        <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">try {</span></code></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="excerpt-number" data-number="142"></td>
+                    <td class="excerpt-line">
+                        <pre><code style="color: #000000"><span style="color: #0000BB">            $retry</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">run</span><span style="color: #007700">(</span><span style="color: #0000BB">$action</span><span style="color: #007700">);</span></code></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="excerpt-number" data-number="143"></td>
+                    <td class="excerpt-line">
+                        <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">} catch (</span><span style="color: #0000BB">PDOException $e</span><span style="color: #007700">) {</span></code></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="excerpt-number" data-number="144"></td>
+                    <td class="excerpt-line">
+                        <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">throw new </span><span style="color: #0000BB">MissingConnectionException</span><span style="color: #007700">(</span></code>
+                        </pre></span></td>
+                </tr>
+                <tr>
+                    <td class="excerpt-number" data-number="145"></td>
+                    <td class="excerpt-line">
+                        <pre><code style="color: #000000"><span style="color: #0000BB">                </span><span style="color: #007700">[</span></code></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="excerpt-number" data-number="146"></td>
+                    <td class="excerpt-line">
+                        <pre><code style="color: #000000"><span style="color: #0000BB">                    </span><span style="color: #DD0000">'driver' </span><span style="color: #007700">=&gt; </span><span style="color: #0000BB">App</span><span style="color: #007700">::</span><span style="color: #0000BB">shortName</span><span style="color: #007700">(static::class, </span><span style="color: #DD0000">'Database/Driver'</span><span style="color: #007700">),</span></code></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="excerpt-number" data-number="147"></td>
+                    <td class="excerpt-line">
+                        <pre><code style="color: #000000"><span style="color: #0000BB">                    </span><span style="color: #DD0000">'reason' </span><span style="color: #007700">=&gt; </span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">(),</span></code></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="excerpt-number" data-number="148"></td>
+                    <td class="excerpt-line">
+                        <pre><code style="color: #000000"><span style="color: #0000BB">                </span><span style="color: #007700">],</span></code></pre>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <ul class="stack-frames">
+            <li id="stack-frame-0-0" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-0" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        CORE/src/Database/Driver/Postgres.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>104 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Cake\Database\Driver-&gt;_connect </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/cakephp/src/Database/Driver/Postgres.php&amp;line=104"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-0" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="100"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">} else {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="101"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            $dsn </span><span style="color: #007700">= </span><span style="color: #DD0000">"pgsql:dbname=</span><span style="color: #007700">{</span><span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'database'</span><span style="color: #007700">]}</span><span style="color: #DD0000">"</span><span style="color: #007700">;</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="102"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="103"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="104"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">        $this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_connect</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">, </span><span style="color: #0000BB">$config</span><span style="color: #007700">);</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="105"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        $this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_connection </span><span style="color: #007700">= </span><span style="color: #0000BB">$connection </span><span style="color: #007700">= </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getConnection</span><span style="color: #007700">();</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="106"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">if (!empty(</span><span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'encoding'</span><span style="color: #007700">])) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="107"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            $this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setEncoding</span><span style="color: #007700">(</span><span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'encoding'</span><span style="color: #007700">]);</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="108"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-0">Toggle Arguments</a>
+                    <div id="stack-args-0-0" class="stack-args" style="display: none;">
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-string">&#039;pgsql:host=postgres;port=5432;dbname=TMZ&#039;</span>
+                            </div>
+                        </div>
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+  <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;_role&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;write&#039;</span><span class="cake-dbg-punct">,</span></span>
+  <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;persistent&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span><span class="cake-dbg-punct">,</span></span>
+  <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;timezone&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;UTC&#039;</span><span class="cake-dbg-punct">,</span></span>
+  <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;flags&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">12</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">20</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">2</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;cacheMetadata&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">true</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;quoteIdentifiers&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;host&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;postgres&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;username&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;TMZAPP&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;password&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;TMZ123&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;database&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;TMZ&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;schema&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;public&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;port&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">5432</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;encoding&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;utf8&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;init&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-1" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-1" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        CORE/src/Database/Schema/SchemaDialect.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>51 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Cake\Database\Driver\Postgres-&gt;connect </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/cakephp/src/Database/Schema/SchemaDialect.php&amp;line=51"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-1" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="47"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">     </span><span style="color: #007700">* @</span><span style="color: #0000BB">param \Cake\Database\DriverInterface $driver The driver to </span><span style="color: #007700">use.</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="48"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">     </span><span style="color: #007700">*/</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="49"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">public function </span><span style="color: #0000BB">__construct</span><span style="color: #007700">(</span><span style="color: #0000BB">DriverInterface $driver</span><span style="color: #007700">)</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="50"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">{</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="51"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">        $driver</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">connect</span><span style="color: #007700">();</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="52"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        $this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_driver </span><span style="color: #007700">= </span><span style="color: #0000BB">$driver</span><span style="color: #007700">;</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="53"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="54"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="55"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #FF8000">/**</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-1">Toggle Arguments</a>
+                    <div id="stack-args-0-1" class="stack-args" style="display: none;">
+                        <div class="cake-debug">No arguments</div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-2" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-2" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        CORE/src/Database/Driver/Postgres.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>141 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Cake\Database\Schema\SchemaDialect-&gt;__construct </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/cakephp/src/Database/Driver/Postgres.php&amp;line=141"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-2" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="137"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">     </span><span style="color: #007700">*/</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="138"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">public function </span><span style="color: #0000BB">schemaDialect</span><span style="color: #007700">(): </span><span style="color: #0000BB">SchemaDialect</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="139"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">{</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="140"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">if (</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_schemaDialect </span><span style="color: #007700">=== </span><span style="color: #0000BB">null</span><span style="color: #007700">) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="141"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">            $this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_schemaDialect </span><span style="color: #007700">= new </span><span style="color: #0000BB">PostgresSchemaDialect</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">);</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="142"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="143"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="144"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">return </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_schemaDialect</span><span style="color: #007700">;</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="145"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-2">Toggle Arguments</a>
+                    <div id="stack-args-0-2" class="stack-args" style="display: none;">
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0c95287.27548254-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Database\Driver\Postgres</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;connected&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;role&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;write&#039;</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-3" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-3" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        CORE/src/Database/Schema/Collection.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>53 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Cake\Database\Driver\Postgres-&gt;schemaDialect </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/cakephp/src/Database/Schema/Collection.php&amp;line=53"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-3" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="49"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">     </span><span style="color: #007700">*/</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="50"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">public function </span><span style="color: #0000BB">__construct</span><span style="color: #007700">(</span><span style="color: #0000BB">Connection $connection</span><span style="color: #007700">)</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="51"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">{</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="52"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        $this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_connection </span><span style="color: #007700">= </span><span style="color: #0000BB">$connection</span><span style="color: #007700">;</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="53"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">        $this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_dialect </span><span style="color: #007700">= </span><span style="color: #0000BB">$connection</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getDriver</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">schemaDialect</span><span style="color: #007700">();</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="54"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="55"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="56"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #FF8000">/**</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="57"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">     </span><span style="color: #007700">* </span><span style="color: #0000BB">Get the </span><span style="color: #007700">list </span><span style="color: #0000BB">of tables</span><span style="color: #007700">, </span><span style="color: #0000BB">excluding any views</span><span style="color: #007700">, </span><span style="color: #0000BB">available in the current connection</span><span style="color: #007700">.</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-3">Toggle Arguments</a>
+                    <div id="stack-args-0-3" class="stack-args" style="display: none;">
+                        <div class="cake-debug">No arguments</div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-4" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-4" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        CORE/src/Database/Connection.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>542 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Cake\Database\Schema\Collection-&gt;__construct </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/cakephp/src/Database/Connection.php&amp;line=542"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-4" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="538"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="539"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="540"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">if (!empty(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_config</span><span style="color: #007700">[</span><span style="color: #DD0000">'cacheMetadata'</span><span style="color: #007700">])) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="541"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">return </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_schemaCollection </span><span style="color: #007700">= new </span><span style="color: #0000BB">CachedCollection</span><span style="color: #007700">(</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="542"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">                </span><span style="color: #007700">new </span><span style="color: #0000BB">SchemaCollection</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">),</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="543"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">                </span><span style="color: #007700">empty(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_config</span><span style="color: #007700">[</span><span style="color: #DD0000">'cacheKeyPrefix'</span><span style="color: #007700">]) ? </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">configName</span><span style="color: #007700">() : </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_config</span><span style="color: #007700">[</span><span style="color: #DD0000">'cacheKeyPrefix'</span><span style="color: #007700">],</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="544"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">                $this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getCacher</span><span style="color: #007700">()</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="545"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">);</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="546"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-4">Toggle Arguments</a>
+                    <div id="stack-args-0-4" class="stack-args" style="display: none;">
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0ca3538.39886139-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Database\Connection</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;config&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;password&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;*****&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;username&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;*****&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;host&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;*****&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;database&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;*****&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;driver&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Postgres&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;persistent&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;timezone&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;UTC&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;flags&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;cacheMetadata&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">true</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;log&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;quoteIdentifiers&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;name&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;default&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;readDriver&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0ca3538.39886139-1"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Database\Driver\Postgres</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;connected&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;role&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;write&#039;</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;writeDriver&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-ref"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Database\Driver\Postgres</span><span class="cake-dbg-punct">) </span><a
+                                    class="cake-dbg-ref" href="#cake-db-object-663758e0ca3538.39886139-1">id:
+                                    1</a><span class="cake-dbg-punct"> {}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;transactionLevel&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">0</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;transactionStarted&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;useSavePoints&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;logQueries&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">true</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;logger&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0ca3538.39886139-2"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">DebugKit\Database\Log\DebugLog</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_queries</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_logger</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_connectionName</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;default&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_totalTime</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">0</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_totalRows</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">0</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_includeSchema</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-5" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-5" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        CORE/src/ORM/Table.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>527 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Cake\Database\Connection-&gt;getSchemaCollection </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/cakephp/src/ORM/Table.php&amp;line=527"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-5" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="523"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">public function </span><span style="color: #0000BB">getSchema</span><span style="color: #007700">(): </span><span style="color: #0000BB">TableSchemaInterface</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="524"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">{</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="525"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">if (</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_schema </span><span style="color: #007700">=== </span><span style="color: #0000BB">null</span><span style="color: #007700">) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="526"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            $this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_schema </span><span style="color: #007700">= </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getConnection</span><span style="color: #007700">()</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="527"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">                </span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getSchemaCollection</span><span style="color: #007700">()</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="528"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">                </span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">describe</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getTable</span><span style="color: #007700">());</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="529"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="530"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            $method </span><span style="color: #007700">= new </span><span style="color: #0000BB">ReflectionMethod</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">, </span><span style="color: #DD0000">'_initializeSchema'</span><span style="color: #007700">);</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="531"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">if (</span><span style="color: #0000BB">$method</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getDeclaringClass</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">getName</span><span style="color: #007700">() != </span><span style="color: #0000BB">Table</span><span style="color: #007700">::class) {</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-5">Toggle Arguments</a>
+                    <div id="stack-args-0-5" class="stack-args" style="display: none;">
+                        <div class="cake-debug">No arguments</div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-6" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-6" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        CORE/src/ORM/Query.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>309 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Cake\ORM\Table-&gt;getSchema </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/cakephp/src/ORM/Query.php&amp;line=309"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-6" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="305"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">     </span><span style="color: #007700">*/</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="306"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">public function </span><span style="color: #0000BB">addDefaultTypes</span><span style="color: #007700">(</span><span style="color: #0000BB">Table $table</span><span style="color: #007700">)</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="307"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">{</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="308"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        $alias </span><span style="color: #007700">= </span><span style="color: #0000BB">$table</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getAlias</span><span style="color: #007700">();</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="309"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">        $map </span><span style="color: #007700">= </span><span style="color: #0000BB">$table</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getSchema</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">typeMap</span><span style="color: #007700">();</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="310"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        $fields </span><span style="color: #007700">= [];</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="311"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">foreach (</span><span style="color: #0000BB">$map </span><span style="color: #007700">as </span><span style="color: #0000BB">$f </span><span style="color: #007700">=&gt; </span><span style="color: #0000BB">$type</span><span style="color: #007700">) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="312"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            $fields</span><span style="color: #007700">[</span><span style="color: #0000BB">$f</span><span style="color: #007700">] = </span><span style="color: #0000BB">$fields</span><span style="color: #007700">[</span><span style="color: #0000BB">$alias </span><span style="color: #007700">. </span><span style="color: #DD0000">'.' </span><span style="color: #007700">. </span><span style="color: #0000BB">$f</span><span style="color: #007700">] = </span><span style="color: #0000BB">$fields</span><span style="color: #007700">[</span><span style="color: #0000BB">$alias </span><span style="color: #007700">. </span><span style="color: #DD0000">'__' </span><span style="color: #007700">. </span><span style="color: #0000BB">$f</span><span style="color: #007700">] = </span><span style="color: #0000BB">$type</span><span style="color: #007700">;</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="313"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-6">Toggle Arguments</a>
+                    <div id="stack-args-0-6" class="stack-args" style="display: none;">
+                        <div class="cake-debug">No arguments</div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-7" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-7" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        CORE/src/ORM/Query.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>185 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Cake\ORM\Query-&gt;addDefaultTypes </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/cakephp/src/ORM/Query.php&amp;line=185"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-7" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="181"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        parent</span><span style="color: #007700">::</span><span style="color: #0000BB">__construct</span><span style="color: #007700">(</span><span style="color: #0000BB">$connection</span><span style="color: #007700">);</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="182"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        $this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setRepository</span><span style="color: #007700">(</span><span style="color: #0000BB">$table</span><span style="color: #007700">);</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="183"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="184"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">if (</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_repository </span><span style="color: #007700">!== </span><span style="color: #0000BB">null</span><span style="color: #007700">) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="185"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">            $this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addDefaultTypes</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_repository</span><span style="color: #007700">);</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="186"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="187"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="188"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="189"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #FF8000">/**</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-7">Toggle Arguments</a>
+                    <div id="stack-args-0-7" class="stack-args" style="display: none;">
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0cc7138.68300830-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">App\Model\Table\UsersTable</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;registryAlias&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Users&#039;</span></span>
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;table&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;users&#039;</span></span>
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;alias&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Users&#039;</span></span>
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;entityClass&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;App\Model\Entity\User&#039;</span></span>
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;associations&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;behaviors&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Timestamp&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;defaultConnection&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;default&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;connectionName&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;default&#039;</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-8" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-8" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        CORE/src/ORM/Table.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>1763 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Cake\ORM\Query-&gt;__construct </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/cakephp/src/ORM/Table.php&amp;line=1763"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-8" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="1759"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">     </span><span style="color: #007700">* @return </span><span style="color: #0000BB">\Cake\ORM\Query\SelectQuery</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="1760"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">     </span><span style="color: #007700">*/</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="1761"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">public function </span><span style="color: #0000BB">selectQuery</span><span style="color: #007700">(): </span><span style="color: #0000BB">SelectQuery</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="1762"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">{</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="1763"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">return new </span><span style="color: #0000BB">SelectQuery</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getConnection</span><span style="color: #007700">(), </span><span style="color: #0000BB">$this</span><span style="color: #007700">);</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="1764"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="1765"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="1766"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #FF8000">/**</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="1767"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">     </span><span style="color: #007700">* </span><span style="color: #0000BB">Creates a </span><span style="color: #007700">new </span><span style="color: #0000BB">UpdateQuery instance </span><span style="color: #007700">for </span><span style="color: #0000BB">a table</span><span style="color: #007700">.</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-8">Toggle Arguments</a>
+                    <div id="stack-args-0-8" class="stack-args" style="display: none;">
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0cd2783.46552148-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Database\Connection</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;config&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;password&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;*****&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;username&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;*****&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;host&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;*****&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;database&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;*****&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;driver&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Postgres&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;persistent&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;timezone&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;UTC&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;flags&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;cacheMetadata&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">true</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;log&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;quoteIdentifiers&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;name&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;default&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;readDriver&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0cd2783.46552148-1"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Database\Driver\Postgres</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;connected&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;role&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;write&#039;</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;writeDriver&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-ref"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Database\Driver\Postgres</span><span class="cake-dbg-punct">) </span><a
+                                    class="cake-dbg-ref" href="#cake-db-object-663758e0cd2783.46552148-1">id:
+                                    1</a><span class="cake-dbg-punct"> {}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;transactionLevel&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">0</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;transactionStarted&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;useSavePoints&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;logQueries&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">true</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;logger&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0cd2783.46552148-2"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">DebugKit\Database\Log\DebugLog</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_queries</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_logger</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_connectionName</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;default&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_totalTime</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">0</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_totalRows</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">0</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_includeSchema</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0cd3b86.94041498-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">App\Model\Table\UsersTable</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;registryAlias&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Users&#039;</span></span>
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;table&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;users&#039;</span></span>
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;alias&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Users&#039;</span></span>
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;entityClass&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;App\Model\Entity\User&#039;</span></span>
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;associations&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;behaviors&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Timestamp&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;defaultConnection&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;default&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;connectionName&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;default&#039;</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-9" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-9" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        CORE/src/ORM/Table.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>1281 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Cake\ORM\Table-&gt;selectQuery </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/cakephp/src/ORM/Table.php&amp;line=1281"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-9" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="1277"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">     </span><span style="color: #007700">* @return </span><span style="color: #0000BB">\Cake\ORM\Query The query builder</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="1278"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">     </span><span style="color: #007700">*/</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="1279"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">public function </span><span style="color: #0000BB">find</span><span style="color: #007700">(</span><span style="color: #0000BB">string $type </span><span style="color: #007700">= </span><span style="color: #DD0000">'all'</span><span style="color: #007700">, array </span><span style="color: #0000BB">$options </span><span style="color: #007700">= []): </span><span style="color: #0000BB">Query</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="1280"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">{</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="1281"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">return </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">callFinder</span><span style="color: #007700">(</span><span style="color: #0000BB">$type</span><span style="color: #007700">, </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">selectQuery</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">select</span><span style="color: #007700">(), </span><span style="color: #0000BB">$options</span><span style="color: #007700">);</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="1282"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="1283"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="1284"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #FF8000">/**</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="1285"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">     </span><span style="color: #007700">* </span><span style="color: #0000BB">Returns the query </span><span style="color: #007700">as </span><span style="color: #0000BB">passed</span><span style="color: #007700">.</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-9">Toggle Arguments</a>
+                    <div id="stack-args-0-9" class="stack-args" style="display: none;">
+                        <div class="cake-debug">No arguments</div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-10" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-10" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        ROOT/vendor/cakephp/authentication/src/Identifier/Resolver/OrmResolver.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>59 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Cake\ORM\Table-&gt;find </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/authentication/src/Identifier/Resolver/OrmResolver.php&amp;line=59"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-10" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="55"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">public function </span><span style="color: #0000BB">find</span><span style="color: #007700">(array </span><span style="color: #0000BB">$conditions</span><span style="color: #007700">, </span><span style="color: #0000BB">$type </span><span style="color: #007700">= </span><span style="color: #0000BB">self</span><span style="color: #007700">::</span><span style="color: #0000BB">TYPE_AND</span><span style="color: #007700">)</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="56"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">{</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="57"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        $table </span><span style="color: #007700">= </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getTableLocator</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">get</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_config</span><span style="color: #007700">[</span><span style="color: #DD0000">'userModel'</span><span style="color: #007700">]);</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="58"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="59"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">        $query </span><span style="color: #007700">= </span><span style="color: #0000BB">$table</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">find</span><span style="color: #007700">();</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="60"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        $finders </span><span style="color: #007700">= (array)</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_config</span><span style="color: #007700">[</span><span style="color: #DD0000">'finder'</span><span style="color: #007700">];</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="61"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">foreach (</span><span style="color: #0000BB">$finders </span><span style="color: #007700">as </span><span style="color: #0000BB">$finder </span><span style="color: #007700">=&gt; </span><span style="color: #0000BB">$options</span><span style="color: #007700">) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="62"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">if (</span><span style="color: #0000BB">is_string</span><span style="color: #007700">(</span><span style="color: #0000BB">$options</span><span style="color: #007700">)) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="63"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">                $query</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">find</span><span style="color: #007700">(</span><span style="color: #0000BB">$options</span><span style="color: #007700">);</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-10">Toggle Arguments</a>
+                    <div id="stack-args-0-10" class="stack-args" style="display: none;">
+                        <div class="cake-debug">No arguments</div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-11" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-11" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        ROOT/vendor/cakephp/authentication/src/Identifier/PasswordIdentifier.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>157 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Authentication\Identifier\Resolver\OrmResolver-&gt;find </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/authentication/src/Identifier/PasswordIdentifier.php&amp;line=157"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-11" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="153"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">foreach ((array)</span><span style="color: #0000BB">$fields </span><span style="color: #007700">as </span><span style="color: #0000BB">$field</span><span style="color: #007700">) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="154"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            $conditions</span><span style="color: #007700">[</span><span style="color: #0000BB">$field</span><span style="color: #007700">] = </span><span style="color: #0000BB">$identifier</span><span style="color: #007700">;</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="155"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="156"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="157"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">return </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getResolver</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">find</span><span style="color: #007700">(</span><span style="color: #0000BB">$conditions</span><span style="color: #007700">, </span><span style="color: #0000BB">ResolverInterface</span><span style="color: #007700">::</span><span style="color: #0000BB">TYPE_OR</span><span style="color: #007700">);</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="158"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="159"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="160"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-11">Toggle Arguments</a>
+                    <div id="stack-args-0-11" class="stack-args" style="display: none;">
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+  <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;username&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span>
+                            </div>
+                        </div>
+                        <div class="cake-debug">
+                            <div class="cake-dbg"><span class="cake-dbg-string">&#039;OR&#039;</span></div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-12" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-12" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        ROOT/vendor/cakephp/authentication/src/Identifier/PasswordIdentifier.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>99 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Authentication\Identifier\PasswordIdentifier-&gt;_findIdentity </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/authentication/src/Identifier/PasswordIdentifier.php&amp;line=99"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-12" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="95"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">if (!isset(</span><span style="color: #0000BB">$credentials</span><span style="color: #007700">[</span><span style="color: #0000BB">self</span><span style="color: #007700">::</span><span style="color: #0000BB">CREDENTIAL_USERNAME</span><span style="color: #007700">])) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="96"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">return </span><span style="color: #0000BB">null</span><span style="color: #007700">;</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="97"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="98"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="99"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">        $identity </span><span style="color: #007700">= </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_findIdentity</span><span style="color: #007700">(</span><span style="color: #0000BB">$credentials</span><span style="color: #007700">[</span><span style="color: #0000BB">self</span><span style="color: #007700">::</span><span style="color: #0000BB">CREDENTIAL_USERNAME</span><span style="color: #007700">]);</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="100"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">if (</span><span style="color: #0000BB">array_key_exists</span><span style="color: #007700">(</span><span style="color: #0000BB">self</span><span style="color: #007700">::</span><span style="color: #0000BB">CREDENTIAL_PASSWORD</span><span style="color: #007700">, </span><span style="color: #0000BB">$credentials</span><span style="color: #007700">)) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="101"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            $password </span><span style="color: #007700">= </span><span style="color: #0000BB">$credentials</span><span style="color: #007700">[</span><span style="color: #0000BB">self</span><span style="color: #007700">::</span><span style="color: #0000BB">CREDENTIAL_PASSWORD</span><span style="color: #007700">];</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="102"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">if (!</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_checkPassword</span><span style="color: #007700">(</span><span style="color: #0000BB">$identity</span><span style="color: #007700">, </span><span style="color: #0000BB">$password</span><span style="color: #007700">)) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="103"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">                </span><span style="color: #007700">return </span><span style="color: #0000BB">null</span><span style="color: #007700">;</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-12">Toggle Arguments</a>
+                    <div id="stack-args-0-12" class="stack-args" style="display: none;">
+                        <div class="cake-debug">
+                            <div class="cake-dbg"><span class="cake-dbg-string">&#039;admin&#039;</span></div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-13" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-13" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        ROOT/vendor/cakephp/authentication/src/Identifier/IdentifierCollection.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>52 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Authentication\Identifier\PasswordIdentifier-&gt;identify </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/authentication/src/Identifier/IdentifierCollection.php&amp;line=52"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-13" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="48"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">public function </span><span style="color: #0000BB">identify</span><span style="color: #007700">(array </span><span style="color: #0000BB">$credentials</span><span style="color: #007700">)</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="49"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">{</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="50"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #FF8000">/** @var \Authentication\Identifier\IdentifierInterface $identifier */</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="51"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">foreach (</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_loaded </span><span style="color: #007700">as </span><span style="color: #0000BB">$name </span><span style="color: #007700">=&gt; </span><span style="color: #0000BB">$identifier</span><span style="color: #007700">) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="52"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">            $result </span><span style="color: #007700">= </span><span style="color: #0000BB">$identifier</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">identify</span><span style="color: #007700">(</span><span style="color: #0000BB">$credentials</span><span style="color: #007700">);</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="53"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">if (</span><span style="color: #0000BB">$result</span><span style="color: #007700">) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="54"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">                $this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_successfulIdentifier </span><span style="color: #007700">= </span><span style="color: #0000BB">$identifier</span><span style="color: #007700">;</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="55"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="56"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">                </span><span style="color: #007700">return </span><span style="color: #0000BB">$result</span><span style="color: #007700">;</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-13">Toggle Arguments</a>
+                    <div id="stack-args-0-13" class="stack-args" style="display: none;">
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+  <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;username&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span>
+  <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;password&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-14" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-14" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        ROOT/vendor/cakephp/authentication/src/Authenticator/FormAuthenticator.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>131 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Authentication\Identifier\IdentifierCollection-&gt;identify </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/authentication/src/Authenticator/FormAuthenticator.php&amp;line=131"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-14" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="127"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">                </span><span style="color: #DD0000">'Login credentials not found'</span><span style="color: #007700">,</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="128"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">]);</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="129"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="130"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="131"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">        $user </span><span style="color: #007700">= </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_identifier</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">identify</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="132"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="133"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">if (empty(</span><span style="color: #0000BB">$user</span><span style="color: #007700">)) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="134"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">return new </span><span style="color: #0000BB">Result</span><span style="color: #007700">(</span><span style="color: #0000BB">null</span><span style="color: #007700">, </span><span style="color: #0000BB">Result</span><span style="color: #007700">::</span><span style="color: #0000BB">FAILURE_IDENTITY_NOT_FOUND</span><span style="color: #007700">, </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_identifier</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getErrors</span><span style="color: #007700">());</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="135"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-14">Toggle Arguments</a>
+                    <div id="stack-args-0-14" class="stack-args" style="display: none;">
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+  <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;username&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span>
+  <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;password&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-15" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-15" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        ROOT/vendor/cakephp/authentication/src/AuthenticationService.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>184 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Authentication\Authenticator\FormAuthenticator-&gt;authenticate </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/authentication/src/AuthenticationService.php&amp;line=184"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-15" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="180"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">{</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="181"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        $result </span><span style="color: #007700">= </span><span style="color: #0000BB">null</span><span style="color: #007700">;</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="182"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #FF8000">/** @var \Authentication\Authenticator\AuthenticatorInterface $authenticator */</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="183"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">foreach (</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">authenticators</span><span style="color: #007700">() as </span><span style="color: #0000BB">$authenticator</span><span style="color: #007700">) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="184"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">            $result </span><span style="color: #007700">= </span><span style="color: #0000BB">$authenticator</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">authenticate</span><span style="color: #007700">(</span><span style="color: #0000BB">$request</span><span style="color: #007700">);</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="185"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">if (</span><span style="color: #0000BB">$result</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">isValid</span><span style="color: #007700">()) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="186"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">                $this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_successfulAuthenticator </span><span style="color: #007700">= </span><span style="color: #0000BB">$authenticator</span><span style="color: #007700">;</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="187"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="188"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">                </span><span style="color: #007700">return </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_result </span><span style="color: #007700">= </span><span style="color: #0000BB">$result</span><span style="color: #007700">;</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-15">Toggle Arguments</a>
+                    <div id="stack-args-0-15" class="stack-args" style="display: none;">
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0d2f568.25572966-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\ServerRequest</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">trustProxy</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+  <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">params</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;controller&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Token&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;action&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;pass&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;token&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;login&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;prefix&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Api&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;plugin&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;_matchedRoute&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/api/:controller/:action/*&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">data</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;username&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;password&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">query</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">cookies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHPSESSID&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_environment</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_USER_AGENT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PostmanRuntime/7.37.3&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;*/*&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_POSTMAN_TOKEN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;19e974bd-007a-4a02-931a-f5bf30967e4a&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_HOST&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost:8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT_ENCODING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;gzip, deflate, br&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_CONNECTION&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;keep-alive&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_TYPE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;application/x-www-form-urlencoded&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_LENGTH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;29&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_COOKIE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PHPSESSID=1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PATH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SIGNATURE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&lt;address&gt;Apache/2.4.59 (Debian) Server at localhost Port 8080&lt;/address&gt;
+&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SOFTWARE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Apache/2.4.59 (Debian)&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;172.19.0.2&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;192.168.65.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_SCHEME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;http&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_PREFIX&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADMIN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;jeronimo@systemctl.es&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_FILENAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;52211&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_URL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;GATEWAY_INTERFACE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;CGI/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PROTOCOL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;QUERY_STRING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_URI&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHP_SELF&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME_FLOAT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(float)</span> <span class="cake-dbg-number">1714903260.9824</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1714903260</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argv&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argc&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">0</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ORIGINAL_REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">trustedProxies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectors</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;get&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;GET&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;post&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;put&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PUT&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;patch&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PATCH&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;delete&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;DELETE&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;head&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HEAD&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;OPTIONS&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ssl&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;https&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ajax&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP_X_REQUESTED_WITH&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;XMLHttpRequest&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;exclude&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;mobile&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d2f568.25572966-1"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;tablet&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d2f568.25572966-2"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectorCache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d2f568.25572966-3"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\PhpInputStream</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">resource</span><span class="cake-dbg-punct"> =&gt; </span>(resource) Resource id #4</span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;php://input&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">cache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">reachedEof</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d2f568.25572966-4"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d2f568.25572966-5"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d2f568.25572966-6"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">6</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_engine</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_started</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_lifetime</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1440</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_isCLI</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">headerSentInfo</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">flash</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d2f568.25572966-7"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\FlashMessage</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">7</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_defaultConfig</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-ref"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) </span><a
+                                    class="cake-dbg-ref" href="#cake-db-object-663758e0d2f568.25572966-6">id:
+                                    6</a><span class="cake-dbg-punct"> {}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_config</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_configInitialized</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">true</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">attributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;route&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d2f568.25572966-8"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Routing\Route\DashedRoute</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">8</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">emulatedAttributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;session&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;flash&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;webroot&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;base&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;params&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;here&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uploadedFiles</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">protocol</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">requestTarget</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-16" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-16" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        ROOT/vendor/cakephp/authentication/src/Middleware/AuthenticationMiddleware.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>105 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Authentication\AuthenticationService-&gt;authenticate </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/authentication/src/Middleware/AuthenticationMiddleware.php&amp;line=105"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-16" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="101"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">{</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="102"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        $service </span><span style="color: #007700">= </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getAuthenticationService</span><span style="color: #007700">(</span><span style="color: #0000BB">$request</span><span style="color: #007700">);</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="103"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="104"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">try {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="105"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">            $result </span><span style="color: #007700">= </span><span style="color: #0000BB">$service</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">authenticate</span><span style="color: #007700">(</span><span style="color: #0000BB">$request</span><span style="color: #007700">);</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="106"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">} catch (</span><span style="color: #0000BB">AuthenticationRequiredException $e</span><span style="color: #007700">) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="107"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            $body </span><span style="color: #007700">= new </span><span style="color: #0000BB">Stream</span><span style="color: #007700">(</span><span style="color: #DD0000">'php://memory'</span><span style="color: #007700">, </span><span style="color: #DD0000">'rw'</span><span style="color: #007700">);</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="108"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            $body</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">write</span><span style="color: #007700">(</span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getBody</span><span style="color: #007700">());</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="109"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            $response </span><span style="color: #007700">= new </span><span style="color: #0000BB">Response</span><span style="color: #007700">();</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-16">Toggle Arguments</a>
+                    <div id="stack-args-0-16" class="stack-args" style="display: none;">
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0d4a1f9.14554097-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\ServerRequest</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">trustProxy</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+  <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">params</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;controller&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Token&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;action&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;pass&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;token&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;login&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;prefix&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Api&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;plugin&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;_matchedRoute&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/api/:controller/:action/*&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">data</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;username&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;password&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">query</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">cookies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHPSESSID&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_environment</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_USER_AGENT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PostmanRuntime/7.37.3&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;*/*&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_POSTMAN_TOKEN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;19e974bd-007a-4a02-931a-f5bf30967e4a&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_HOST&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost:8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT_ENCODING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;gzip, deflate, br&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_CONNECTION&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;keep-alive&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_TYPE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;application/x-www-form-urlencoded&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_LENGTH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;29&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_COOKIE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PHPSESSID=1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PATH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SIGNATURE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&lt;address&gt;Apache/2.4.59 (Debian) Server at localhost Port 8080&lt;/address&gt;
+&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SOFTWARE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Apache/2.4.59 (Debian)&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;172.19.0.2&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;192.168.65.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_SCHEME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;http&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_PREFIX&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADMIN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;jeronimo@systemctl.es&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_FILENAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;52211&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_URL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;GATEWAY_INTERFACE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;CGI/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PROTOCOL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;QUERY_STRING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_URI&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHP_SELF&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME_FLOAT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(float)</span> <span class="cake-dbg-number">1714903260.9824</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1714903260</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argv&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argc&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">0</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ORIGINAL_REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">trustedProxies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectors</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;get&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;GET&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;post&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;put&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PUT&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;patch&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PATCH&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;delete&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;DELETE&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;head&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HEAD&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;OPTIONS&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ssl&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;https&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ajax&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP_X_REQUESTED_WITH&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;XMLHttpRequest&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;exclude&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;mobile&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d4a1f9.14554097-1"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;tablet&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d4a1f9.14554097-2"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectorCache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d4a1f9.14554097-3"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\PhpInputStream</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">resource</span><span class="cake-dbg-punct"> =&gt; </span>(resource) Resource id #4</span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;php://input&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">cache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">reachedEof</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d4a1f9.14554097-4"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d4a1f9.14554097-5"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d4a1f9.14554097-6"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">6</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_engine</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_started</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_lifetime</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1440</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_isCLI</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">headerSentInfo</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">flash</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d4a1f9.14554097-7"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\FlashMessage</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">7</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_defaultConfig</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-ref"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) </span><a
+                                    class="cake-dbg-ref" href="#cake-db-object-663758e0d4a1f9.14554097-6">id:
+                                    6</a><span class="cake-dbg-punct"> {}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_config</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_configInitialized</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">true</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">attributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;route&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d4a1f9.14554097-8"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Routing\Route\DashedRoute</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">8</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">emulatedAttributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;session&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;flash&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;webroot&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;base&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;params&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;here&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uploadedFiles</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">protocol</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">requestTarget</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-17" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-17" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        CORE/src/Http/Runner.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>82 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Authentication\Middleware\AuthenticationMiddleware-&gt;process </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/cakephp/src/Http/Runner.php&amp;line=82"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-17" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="78"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">if (</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">queue</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">valid</span><span style="color: #007700">()) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="79"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            $middleware </span><span style="color: #007700">= </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">queue</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">current</span><span style="color: #007700">();</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="80"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            $this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">queue</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">next</span><span style="color: #007700">();</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="81"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="82"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">return </span><span style="color: #0000BB">$middleware</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">process</span><span style="color: #007700">(</span><span style="color: #0000BB">$request</span><span style="color: #007700">, </span><span style="color: #0000BB">$this</span><span style="color: #007700">);</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="83"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="84"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="85"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">if (</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fallbackHandler</span><span style="color: #007700">) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="86"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">return </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fallbackHandler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">handle</span><span style="color: #007700">(</span><span style="color: #0000BB">$request</span><span style="color: #007700">);</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-17">Toggle Arguments</a>
+                    <div id="stack-args-0-17" class="stack-args" style="display: none;">
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0d61002.58747395-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\ServerRequest</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">trustProxy</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+  <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">params</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;controller&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Token&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;action&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;pass&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;token&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;login&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;prefix&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Api&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;plugin&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;_matchedRoute&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/api/:controller/:action/*&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">data</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;username&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;password&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">query</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">cookies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHPSESSID&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_environment</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_USER_AGENT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PostmanRuntime/7.37.3&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;*/*&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_POSTMAN_TOKEN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;19e974bd-007a-4a02-931a-f5bf30967e4a&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_HOST&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost:8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT_ENCODING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;gzip, deflate, br&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_CONNECTION&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;keep-alive&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_TYPE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;application/x-www-form-urlencoded&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_LENGTH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;29&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_COOKIE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PHPSESSID=1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PATH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SIGNATURE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&lt;address&gt;Apache/2.4.59 (Debian) Server at localhost Port 8080&lt;/address&gt;
+&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SOFTWARE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Apache/2.4.59 (Debian)&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;172.19.0.2&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;192.168.65.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_SCHEME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;http&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_PREFIX&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADMIN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;jeronimo@systemctl.es&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_FILENAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;52211&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_URL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;GATEWAY_INTERFACE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;CGI/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PROTOCOL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;QUERY_STRING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_URI&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHP_SELF&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME_FLOAT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(float)</span> <span class="cake-dbg-number">1714903260.9824</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1714903260</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argv&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argc&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">0</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ORIGINAL_REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">trustedProxies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectors</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;get&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;GET&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;post&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;put&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PUT&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;patch&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PATCH&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;delete&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;DELETE&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;head&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HEAD&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;OPTIONS&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ssl&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;https&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ajax&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP_X_REQUESTED_WITH&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;XMLHttpRequest&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;exclude&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;mobile&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d61002.58747395-1"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;tablet&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d61002.58747395-2"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectorCache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d61002.58747395-3"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\PhpInputStream</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">resource</span><span class="cake-dbg-punct"> =&gt; </span>(resource) Resource id #4</span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;php://input&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">cache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">reachedEof</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d61002.58747395-4"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d61002.58747395-5"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d61002.58747395-6"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">6</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_engine</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_started</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_lifetime</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1440</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_isCLI</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">headerSentInfo</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">flash</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d61002.58747395-7"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\FlashMessage</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">7</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_defaultConfig</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-ref"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) </span><a
+                                    class="cake-dbg-ref" href="#cake-db-object-663758e0d61002.58747395-6">id:
+                                    6</a><span class="cake-dbg-punct"> {}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_config</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_configInitialized</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">true</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">attributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;route&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d61002.58747395-8"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Routing\Route\DashedRoute</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">8</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">emulatedAttributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;session&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;flash&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;webroot&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;base&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;params&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;here&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uploadedFiles</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">protocol</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">requestTarget</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0d682a6.62655931-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Runner</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">queue</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d682a6.62655931-1"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\MiddlewareQueue</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">position</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">6</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">queue</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">container</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d682a6.62655931-2"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Core\Container</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">fallbackHandler</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d682a6.62655931-3"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">App\Application</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">configDir</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/config/&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">plugins</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d682a6.62655931-4"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Core\PluginCollection</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">controllerFactory</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">container</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-ref"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Core\Container</span><span class="cake-dbg-punct">) </span><a
+                                    class="cake-dbg-ref" href="#cake-db-object-663758e0d682a6.62655931-2">id:
+                                    2</a><span class="cake-dbg-punct"> {}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_eventManager</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d682a6.62655931-5"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Event\EventManager</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_eventClass</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Cake\Event\Event&#039;</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-18" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-18" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        CORE/src/Http/Middleware/BodyParserMiddleware.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>162 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Cake\Http\Runner-&gt;handle </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/cakephp/src/Http/Middleware/BodyParserMiddleware.php&amp;line=162"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-18" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="158"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="159"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">[</span><span style="color: #0000BB">$type</span><span style="color: #007700">] = </span><span style="color: #0000BB">explode</span><span style="color: #007700">(</span><span style="color: #DD0000">';'</span><span style="color: #007700">, </span><span style="color: #0000BB">$request</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getHeaderLine</span><span style="color: #007700">(</span><span style="color: #DD0000">'Content-Type'</span><span style="color: #007700">));</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="160"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        $type </span><span style="color: #007700">= </span><span style="color: #0000BB">strtolower</span><span style="color: #007700">(</span><span style="color: #0000BB">$type</span><span style="color: #007700">);</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="161"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">if (!isset(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parsers</span><span style="color: #007700">[</span><span style="color: #0000BB">$type</span><span style="color: #007700">])) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="162"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">return </span><span style="color: #0000BB">$handler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">handle</span><span style="color: #007700">(</span><span style="color: #0000BB">$request</span><span style="color: #007700">);</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="163"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="164"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="165"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        $parser </span><span style="color: #007700">= </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parsers</span><span style="color: #007700">[</span><span style="color: #0000BB">$type</span><span style="color: #007700">];</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="166"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        $result </span><span style="color: #007700">= </span><span style="color: #0000BB">$parser</span><span style="color: #007700">(</span><span style="color: #0000BB">$request</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getBody</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">getContents</span><span style="color: #007700">());</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-18">Toggle Arguments</a>
+                    <div id="stack-args-0-18" class="stack-args" style="display: none;">
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0d765f8.17015174-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\ServerRequest</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">trustProxy</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+  <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">params</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;controller&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Token&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;action&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;pass&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;token&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;login&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;prefix&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Api&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;plugin&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;_matchedRoute&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/api/:controller/:action/*&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">data</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;username&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;password&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">query</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">cookies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHPSESSID&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_environment</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_USER_AGENT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PostmanRuntime/7.37.3&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;*/*&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_POSTMAN_TOKEN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;19e974bd-007a-4a02-931a-f5bf30967e4a&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_HOST&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost:8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT_ENCODING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;gzip, deflate, br&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_CONNECTION&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;keep-alive&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_TYPE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;application/x-www-form-urlencoded&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_LENGTH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;29&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_COOKIE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PHPSESSID=1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PATH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SIGNATURE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&lt;address&gt;Apache/2.4.59 (Debian) Server at localhost Port 8080&lt;/address&gt;
+&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SOFTWARE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Apache/2.4.59 (Debian)&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;172.19.0.2&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;192.168.65.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_SCHEME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;http&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_PREFIX&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADMIN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;jeronimo@systemctl.es&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_FILENAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;52211&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_URL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;GATEWAY_INTERFACE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;CGI/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PROTOCOL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;QUERY_STRING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_URI&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHP_SELF&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME_FLOAT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(float)</span> <span class="cake-dbg-number">1714903260.9824</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1714903260</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argv&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argc&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">0</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ORIGINAL_REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">trustedProxies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectors</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;get&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;GET&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;post&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;put&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PUT&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;patch&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PATCH&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;delete&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;DELETE&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;head&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HEAD&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;OPTIONS&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ssl&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;https&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ajax&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP_X_REQUESTED_WITH&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;XMLHttpRequest&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;exclude&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;mobile&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d765f8.17015174-1"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;tablet&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d765f8.17015174-2"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectorCache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d765f8.17015174-3"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\PhpInputStream</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">resource</span><span class="cake-dbg-punct"> =&gt; </span>(resource) Resource id #4</span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;php://input&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">cache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">reachedEof</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d765f8.17015174-4"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d765f8.17015174-5"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d765f8.17015174-6"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">6</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_engine</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_started</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_lifetime</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1440</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_isCLI</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">headerSentInfo</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">flash</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d765f8.17015174-7"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\FlashMessage</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">7</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_defaultConfig</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-ref"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) </span><a
+                                    class="cake-dbg-ref" href="#cake-db-object-663758e0d765f8.17015174-6">id:
+                                    6</a><span class="cake-dbg-punct"> {}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_config</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_configInitialized</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">true</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">attributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;route&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d765f8.17015174-8"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Routing\Route\DashedRoute</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">8</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">emulatedAttributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;session&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;flash&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;webroot&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;base&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;params&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;here&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uploadedFiles</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">protocol</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">requestTarget</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-19" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-19" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        CORE/src/Http/Runner.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>82 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Cake\Http\Middleware\BodyParserMiddleware-&gt;process </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/cakephp/src/Http/Runner.php&amp;line=82"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-19" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="78"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">if (</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">queue</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">valid</span><span style="color: #007700">()) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="79"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            $middleware </span><span style="color: #007700">= </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">queue</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">current</span><span style="color: #007700">();</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="80"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            $this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">queue</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">next</span><span style="color: #007700">();</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="81"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="82"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">return </span><span style="color: #0000BB">$middleware</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">process</span><span style="color: #007700">(</span><span style="color: #0000BB">$request</span><span style="color: #007700">, </span><span style="color: #0000BB">$this</span><span style="color: #007700">);</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="83"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="84"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="85"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">if (</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fallbackHandler</span><span style="color: #007700">) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="86"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">return </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fallbackHandler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">handle</span><span style="color: #007700">(</span><span style="color: #0000BB">$request</span><span style="color: #007700">);</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-19">Toggle Arguments</a>
+                    <div id="stack-args-0-19" class="stack-args" style="display: none;">
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0d8cda7.86955015-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\ServerRequest</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">trustProxy</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+  <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">params</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;controller&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Token&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;action&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;pass&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;token&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;login&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;prefix&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Api&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;plugin&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;_matchedRoute&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/api/:controller/:action/*&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">data</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;username&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;password&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">query</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">cookies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHPSESSID&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_environment</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_USER_AGENT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PostmanRuntime/7.37.3&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;*/*&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_POSTMAN_TOKEN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;19e974bd-007a-4a02-931a-f5bf30967e4a&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_HOST&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost:8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT_ENCODING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;gzip, deflate, br&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_CONNECTION&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;keep-alive&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_TYPE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;application/x-www-form-urlencoded&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_LENGTH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;29&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_COOKIE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PHPSESSID=1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PATH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SIGNATURE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&lt;address&gt;Apache/2.4.59 (Debian) Server at localhost Port 8080&lt;/address&gt;
+&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SOFTWARE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Apache/2.4.59 (Debian)&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;172.19.0.2&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;192.168.65.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_SCHEME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;http&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_PREFIX&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADMIN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;jeronimo@systemctl.es&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_FILENAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;52211&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_URL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;GATEWAY_INTERFACE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;CGI/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PROTOCOL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;QUERY_STRING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_URI&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHP_SELF&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME_FLOAT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(float)</span> <span class="cake-dbg-number">1714903260.9824</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1714903260</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argv&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argc&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">0</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ORIGINAL_REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">trustedProxies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectors</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;get&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;GET&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;post&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;put&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PUT&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;patch&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PATCH&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;delete&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;DELETE&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;head&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HEAD&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;OPTIONS&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ssl&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;https&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ajax&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP_X_REQUESTED_WITH&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;XMLHttpRequest&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;exclude&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;mobile&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d8cda7.86955015-1"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;tablet&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d8cda7.86955015-2"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectorCache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d8cda7.86955015-3"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\PhpInputStream</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">resource</span><span class="cake-dbg-punct"> =&gt; </span>(resource) Resource id #4</span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;php://input&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">cache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">reachedEof</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d8cda7.86955015-4"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d8cda7.86955015-5"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d8cda7.86955015-6"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">6</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_engine</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_started</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_lifetime</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1440</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_isCLI</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">headerSentInfo</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">flash</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d8cda7.86955015-7"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\FlashMessage</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">7</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_defaultConfig</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-ref"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) </span><a
+                                    class="cake-dbg-ref" href="#cake-db-object-663758e0d8cda7.86955015-6">id:
+                                    6</a><span class="cake-dbg-punct"> {}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_config</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_configInitialized</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">true</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">attributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;route&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d8cda7.86955015-8"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Routing\Route\DashedRoute</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">8</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">emulatedAttributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;session&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;flash&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;webroot&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;base&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;params&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;here&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uploadedFiles</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">protocol</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">requestTarget</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0d926b6.29308269-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Runner</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">queue</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d926b6.29308269-1"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\MiddlewareQueue</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">position</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">6</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">queue</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">container</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d926b6.29308269-2"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Core\Container</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">fallbackHandler</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d926b6.29308269-3"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">App\Application</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">configDir</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/config/&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">plugins</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d926b6.29308269-4"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Core\PluginCollection</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">controllerFactory</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">container</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-ref"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Core\Container</span><span class="cake-dbg-punct">) </span><a
+                                    class="cake-dbg-ref" href="#cake-db-object-663758e0d926b6.29308269-2">id:
+                                    2</a><span class="cake-dbg-punct"> {}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_eventManager</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d926b6.29308269-5"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Event\EventManager</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_eventClass</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Cake\Event\Event&#039;</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-20" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-20" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        CORE/src/Routing/Middleware/RoutingMiddleware.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>189 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Cake\Http\Runner-&gt;handle </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/cakephp/src/Routing/Middleware/RoutingMiddleware.php&amp;line=189"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-20" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="185"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">);</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="186"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="187"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        $matching </span><span style="color: #007700">= </span><span style="color: #0000BB">Router</span><span style="color: #007700">::</span><span style="color: #0000BB">getRouteCollection</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">getMiddleware</span><span style="color: #007700">(</span><span style="color: #0000BB">$middleware</span><span style="color: #007700">);</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="188"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">if (!</span><span style="color: #0000BB">$matching</span><span style="color: #007700">) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="189"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">return </span><span style="color: #0000BB">$handler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">handle</span><span style="color: #007700">(</span><span style="color: #0000BB">$request</span><span style="color: #007700">);</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="190"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="191"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="192"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        $container </span><span style="color: #007700">= </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">app </span><span style="color: #007700">instanceof </span><span style="color: #0000BB">ContainerApplicationInterface</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="193"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">? </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">app</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getContainer</span><span style="color: #007700">()</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-20">Toggle Arguments</a>
+                    <div id="stack-args-0-20" class="stack-args" style="display: none;">
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0d9eed4.99983160-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\ServerRequest</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">trustProxy</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+  <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">params</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;controller&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Token&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;action&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;pass&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;token&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;login&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;prefix&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Api&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;plugin&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;_matchedRoute&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/api/:controller/:action/*&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">data</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;username&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;password&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">query</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">cookies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHPSESSID&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_environment</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_USER_AGENT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PostmanRuntime/7.37.3&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;*/*&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_POSTMAN_TOKEN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;19e974bd-007a-4a02-931a-f5bf30967e4a&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_HOST&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost:8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT_ENCODING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;gzip, deflate, br&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_CONNECTION&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;keep-alive&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_TYPE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;application/x-www-form-urlencoded&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_LENGTH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;29&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_COOKIE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PHPSESSID=1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PATH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SIGNATURE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&lt;address&gt;Apache/2.4.59 (Debian) Server at localhost Port 8080&lt;/address&gt;
+&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SOFTWARE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Apache/2.4.59 (Debian)&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;172.19.0.2&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;192.168.65.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_SCHEME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;http&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_PREFIX&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADMIN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;jeronimo@systemctl.es&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_FILENAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;52211&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_URL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;GATEWAY_INTERFACE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;CGI/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PROTOCOL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;QUERY_STRING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_URI&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHP_SELF&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME_FLOAT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(float)</span> <span class="cake-dbg-number">1714903260.9824</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1714903260</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argv&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argc&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">0</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ORIGINAL_REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">trustedProxies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectors</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;get&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;GET&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;post&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;put&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PUT&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;patch&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PATCH&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;delete&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;DELETE&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;head&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HEAD&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;OPTIONS&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ssl&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;https&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ajax&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP_X_REQUESTED_WITH&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;XMLHttpRequest&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;exclude&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;mobile&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d9eed4.99983160-1"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;tablet&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d9eed4.99983160-2"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectorCache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d9eed4.99983160-3"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\PhpInputStream</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">resource</span><span class="cake-dbg-punct"> =&gt; </span>(resource) Resource id #4</span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;php://input&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">cache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">reachedEof</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d9eed4.99983160-4"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d9eed4.99983160-5"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d9eed4.99983160-6"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">6</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_engine</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_started</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_lifetime</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1440</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_isCLI</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">headerSentInfo</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">flash</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d9eed4.99983160-7"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\FlashMessage</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">7</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_defaultConfig</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-ref"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) </span><a
+                                    class="cake-dbg-ref" href="#cake-db-object-663758e0d9eed4.99983160-6">id:
+                                    6</a><span class="cake-dbg-punct"> {}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_config</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_configInitialized</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">true</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">attributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;route&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0d9eed4.99983160-8"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Routing\Route\DashedRoute</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">8</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">emulatedAttributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;session&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;flash&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;webroot&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;base&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;params&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;here&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uploadedFiles</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">protocol</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">requestTarget</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-21" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-21" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        CORE/src/Http/Runner.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>82 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Cake\Routing\Middleware\RoutingMiddleware-&gt;process </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/cakephp/src/Http/Runner.php&amp;line=82"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-21" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="78"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">if (</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">queue</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">valid</span><span style="color: #007700">()) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="79"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            $middleware </span><span style="color: #007700">= </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">queue</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">current</span><span style="color: #007700">();</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="80"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            $this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">queue</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">next</span><span style="color: #007700">();</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="81"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="82"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">return </span><span style="color: #0000BB">$middleware</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">process</span><span style="color: #007700">(</span><span style="color: #0000BB">$request</span><span style="color: #007700">, </span><span style="color: #0000BB">$this</span><span style="color: #007700">);</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="83"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="84"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="85"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">if (</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fallbackHandler</span><span style="color: #007700">) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="86"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">return </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fallbackHandler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">handle</span><span style="color: #007700">(</span><span style="color: #0000BB">$request</span><span style="color: #007700">);</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-21">Toggle Arguments</a>
+                    <div id="stack-args-0-21" class="stack-args" style="display: none;">
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0dae985.93470483-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\ServerRequest</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">trustProxy</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+  <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">params</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;controller&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Token&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;action&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;pass&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;token&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;login&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;prefix&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Api&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;plugin&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;_matchedRoute&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/api/:controller/:action/*&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">data</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;username&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;password&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">query</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">cookies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHPSESSID&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_environment</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_USER_AGENT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PostmanRuntime/7.37.3&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;*/*&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_POSTMAN_TOKEN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;19e974bd-007a-4a02-931a-f5bf30967e4a&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_HOST&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost:8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT_ENCODING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;gzip, deflate, br&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_CONNECTION&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;keep-alive&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_TYPE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;application/x-www-form-urlencoded&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_LENGTH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;29&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_COOKIE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PHPSESSID=1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PATH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SIGNATURE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&lt;address&gt;Apache/2.4.59 (Debian) Server at localhost Port 8080&lt;/address&gt;
+&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SOFTWARE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Apache/2.4.59 (Debian)&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;172.19.0.2&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;192.168.65.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_SCHEME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;http&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_PREFIX&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADMIN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;jeronimo@systemctl.es&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_FILENAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;52211&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_URL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;GATEWAY_INTERFACE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;CGI/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PROTOCOL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;QUERY_STRING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_URI&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHP_SELF&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME_FLOAT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(float)</span> <span class="cake-dbg-number">1714903260.9824</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1714903260</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argv&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argc&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">0</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ORIGINAL_REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">trustedProxies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectors</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;get&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;GET&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;post&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;put&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PUT&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;patch&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PATCH&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;delete&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;DELETE&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;head&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HEAD&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;OPTIONS&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ssl&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;https&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ajax&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP_X_REQUESTED_WITH&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;XMLHttpRequest&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;exclude&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;mobile&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dae985.93470483-1"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;tablet&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dae985.93470483-2"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectorCache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dae985.93470483-3"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\PhpInputStream</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">resource</span><span class="cake-dbg-punct"> =&gt; </span>(resource) Resource id #4</span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;php://input&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">cache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">reachedEof</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dae985.93470483-4"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dae985.93470483-5"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dae985.93470483-6"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">6</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_engine</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_started</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_lifetime</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1440</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_isCLI</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">headerSentInfo</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">flash</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dae985.93470483-7"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\FlashMessage</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">7</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_defaultConfig</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-ref"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) </span><a
+                                    class="cake-dbg-ref" href="#cake-db-object-663758e0dae985.93470483-6">id:
+                                    6</a><span class="cake-dbg-punct"> {}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_config</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_configInitialized</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">true</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">attributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;route&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dae985.93470483-8"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Routing\Route\DashedRoute</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">8</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">emulatedAttributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;session&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;flash&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;webroot&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;base&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;params&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;here&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uploadedFiles</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">protocol</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">requestTarget</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0db4142.40339825-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Runner</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">queue</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0db4142.40339825-1"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\MiddlewareQueue</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">position</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">6</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">queue</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">container</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0db4142.40339825-2"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Core\Container</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">fallbackHandler</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0db4142.40339825-3"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">App\Application</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">configDir</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/config/&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">plugins</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0db4142.40339825-4"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Core\PluginCollection</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">controllerFactory</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">container</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-ref"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Core\Container</span><span class="cake-dbg-punct">) </span><a
+                                    class="cake-dbg-ref" href="#cake-db-object-663758e0db4142.40339825-2">id:
+                                    2</a><span class="cake-dbg-punct"> {}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_eventManager</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0db4142.40339825-5"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Event\EventManager</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_eventClass</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Cake\Event\Event&#039;</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-22" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-22" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        CORE/src/Routing/Middleware/AssetMiddleware.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>68 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Cake\Http\Runner-&gt;handle </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/cakephp/src/Routing/Middleware/AssetMiddleware.php&amp;line=68"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-22" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="64"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">public function </span><span style="color: #0000BB">process</span><span style="color: #007700">(</span><span style="color: #0000BB">ServerRequestInterface $request</span><span style="color: #007700">, </span><span style="color: #0000BB">RequestHandlerInterface $handler</span><span style="color: #007700">): </span><span style="color: #0000BB">ResponseInterface</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="65"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">{</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="66"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        $url </span><span style="color: #007700">= </span><span style="color: #0000BB">$request</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getUri</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">getPath</span><span style="color: #007700">();</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="67"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">if (</span><span style="color: #0000BB">strpos</span><span style="color: #007700">(</span><span style="color: #0000BB">$url</span><span style="color: #007700">, </span><span style="color: #DD0000">'..'</span><span style="color: #007700">) !== </span><span style="color: #0000BB">false </span><span style="color: #007700">|| </span><span style="color: #0000BB">strpos</span><span style="color: #007700">(</span><span style="color: #0000BB">$url</span><span style="color: #007700">, </span><span style="color: #DD0000">'.'</span><span style="color: #007700">) === </span><span style="color: #0000BB">false</span><span style="color: #007700">) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="68"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">return </span><span style="color: #0000BB">$handler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">handle</span><span style="color: #007700">(</span><span style="color: #0000BB">$request</span><span style="color: #007700">);</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="69"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="70"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="71"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">if (</span><span style="color: #0000BB">strpos</span><span style="color: #007700">(</span><span style="color: #0000BB">$url</span><span style="color: #007700">, </span><span style="color: #DD0000">'/.'</span><span style="color: #007700">) !== </span><span style="color: #0000BB">false</span><span style="color: #007700">) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="72"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">return </span><span style="color: #0000BB">$handler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">handle</span><span style="color: #007700">(</span><span style="color: #0000BB">$request</span><span style="color: #007700">);</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-22">Toggle Arguments</a>
+                    <div id="stack-args-0-22" class="stack-args" style="display: none;">
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0dc1e91.34288611-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\ServerRequest</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">trustProxy</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+  <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">params</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;plugin&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;controller&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;action&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;pass&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">data</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;username&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;password&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">query</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">cookies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHPSESSID&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_environment</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_USER_AGENT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PostmanRuntime/7.37.3&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;*/*&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_POSTMAN_TOKEN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;19e974bd-007a-4a02-931a-f5bf30967e4a&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_HOST&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost:8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT_ENCODING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;gzip, deflate, br&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_CONNECTION&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;keep-alive&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_TYPE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;application/x-www-form-urlencoded&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_LENGTH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;29&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_COOKIE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PHPSESSID=1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PATH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SIGNATURE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&lt;address&gt;Apache/2.4.59 (Debian) Server at localhost Port 8080&lt;/address&gt;
+&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SOFTWARE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Apache/2.4.59 (Debian)&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;172.19.0.2&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;192.168.65.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_SCHEME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;http&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_PREFIX&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADMIN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;jeronimo@systemctl.es&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_FILENAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;52211&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_URL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;GATEWAY_INTERFACE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;CGI/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PROTOCOL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;QUERY_STRING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_URI&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHP_SELF&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME_FLOAT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(float)</span> <span class="cake-dbg-number">1714903260.9824</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1714903260</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argv&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argc&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">0</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ORIGINAL_REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">trustedProxies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectors</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;get&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;GET&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;post&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;put&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PUT&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;patch&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PATCH&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;delete&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;DELETE&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;head&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HEAD&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;OPTIONS&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ssl&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;https&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ajax&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP_X_REQUESTED_WITH&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;XMLHttpRequest&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;exclude&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;mobile&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dc1e91.34288611-1"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;tablet&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dc1e91.34288611-2"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectorCache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dc1e91.34288611-3"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\PhpInputStream</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">resource</span><span class="cake-dbg-punct"> =&gt; </span>(resource) Resource id #4</span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;php://input&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">cache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">reachedEof</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dc1e91.34288611-4"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dc1e91.34288611-5"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dc1e91.34288611-6"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">6</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_engine</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_started</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_lifetime</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1440</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_isCLI</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">headerSentInfo</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">flash</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dc1e91.34288611-7"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\FlashMessage</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">7</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_defaultConfig</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-ref"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) </span><a
+                                    class="cake-dbg-ref" href="#cake-db-object-663758e0dc1e91.34288611-6">id:
+                                    6</a><span class="cake-dbg-punct"> {}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_config</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_configInitialized</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">true</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">attributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">emulatedAttributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;session&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;flash&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;webroot&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;base&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;params&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;here&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uploadedFiles</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">protocol</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">requestTarget</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-23" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-23" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        CORE/src/Http/Runner.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>82 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Cake\Routing\Middleware\AssetMiddleware-&gt;process </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/cakephp/src/Http/Runner.php&amp;line=82"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-23" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="78"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">if (</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">queue</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">valid</span><span style="color: #007700">()) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="79"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            $middleware </span><span style="color: #007700">= </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">queue</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">current</span><span style="color: #007700">();</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="80"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            $this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">queue</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">next</span><span style="color: #007700">();</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="81"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="82"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">return </span><span style="color: #0000BB">$middleware</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">process</span><span style="color: #007700">(</span><span style="color: #0000BB">$request</span><span style="color: #007700">, </span><span style="color: #0000BB">$this</span><span style="color: #007700">);</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="83"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="84"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="85"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">if (</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fallbackHandler</span><span style="color: #007700">) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="86"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">return </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fallbackHandler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">handle</span><span style="color: #007700">(</span><span style="color: #0000BB">$request</span><span style="color: #007700">);</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-23">Toggle Arguments</a>
+                    <div id="stack-args-0-23" class="stack-args" style="display: none;">
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0dd27f3.02372250-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\ServerRequest</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">trustProxy</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+  <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">params</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;plugin&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;controller&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;action&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;pass&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">data</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;username&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;password&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">query</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">cookies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHPSESSID&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_environment</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_USER_AGENT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PostmanRuntime/7.37.3&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;*/*&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_POSTMAN_TOKEN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;19e974bd-007a-4a02-931a-f5bf30967e4a&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_HOST&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost:8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT_ENCODING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;gzip, deflate, br&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_CONNECTION&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;keep-alive&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_TYPE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;application/x-www-form-urlencoded&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_LENGTH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;29&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_COOKIE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PHPSESSID=1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PATH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SIGNATURE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&lt;address&gt;Apache/2.4.59 (Debian) Server at localhost Port 8080&lt;/address&gt;
+&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SOFTWARE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Apache/2.4.59 (Debian)&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;172.19.0.2&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;192.168.65.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_SCHEME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;http&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_PREFIX&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADMIN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;jeronimo@systemctl.es&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_FILENAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;52211&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_URL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;GATEWAY_INTERFACE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;CGI/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PROTOCOL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;QUERY_STRING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_URI&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHP_SELF&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME_FLOAT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(float)</span> <span class="cake-dbg-number">1714903260.9824</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1714903260</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argv&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argc&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">0</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ORIGINAL_REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">trustedProxies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectors</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;get&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;GET&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;post&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;put&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PUT&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;patch&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PATCH&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;delete&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;DELETE&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;head&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HEAD&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;OPTIONS&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ssl&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;https&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ajax&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP_X_REQUESTED_WITH&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;XMLHttpRequest&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;exclude&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;mobile&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dd27f3.02372250-1"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;tablet&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dd27f3.02372250-2"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectorCache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dd27f3.02372250-3"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\PhpInputStream</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">resource</span><span class="cake-dbg-punct"> =&gt; </span>(resource) Resource id #4</span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;php://input&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">cache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">reachedEof</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dd27f3.02372250-4"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dd27f3.02372250-5"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dd27f3.02372250-6"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">6</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_engine</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_started</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_lifetime</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1440</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_isCLI</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">headerSentInfo</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">flash</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dd27f3.02372250-7"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\FlashMessage</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">7</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_defaultConfig</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-ref"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) </span><a
+                                    class="cake-dbg-ref" href="#cake-db-object-663758e0dd27f3.02372250-6">id:
+                                    6</a><span class="cake-dbg-punct"> {}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_config</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_configInitialized</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">true</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">attributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">emulatedAttributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;session&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;flash&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;webroot&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;base&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;params&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;here&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uploadedFiles</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">protocol</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">requestTarget</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0dd74b4.74972572-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Runner</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">queue</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dd74b4.74972572-1"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\MiddlewareQueue</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">position</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">6</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">queue</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">container</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dd74b4.74972572-2"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Core\Container</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">fallbackHandler</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dd74b4.74972572-3"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">App\Application</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">configDir</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/config/&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">plugins</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dd74b4.74972572-4"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Core\PluginCollection</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">controllerFactory</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">container</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-ref"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Core\Container</span><span class="cake-dbg-punct">) </span><a
+                                    class="cake-dbg-ref" href="#cake-db-object-663758e0dd74b4.74972572-2">id:
+                                    2</a><span class="cake-dbg-punct"> {}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_eventManager</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dd74b4.74972572-5"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Event\EventManager</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_eventClass</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Cake\Event\Event&#039;</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-24" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-24" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        CORE/src/Error/Middleware/ErrorHandlerMiddleware.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>149 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Cake\Http\Runner-&gt;handle </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/cakephp/src/Error/Middleware/ErrorHandlerMiddleware.php&amp;line=149"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-24" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="145"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">     </span><span style="color: #007700">*/</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="146"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">public function </span><span style="color: #0000BB">process</span><span style="color: #007700">(</span><span style="color: #0000BB">ServerRequestInterface $request</span><span style="color: #007700">, </span><span style="color: #0000BB">RequestHandlerInterface $handler</span><span style="color: #007700">): </span><span style="color: #0000BB">ResponseInterface</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="147"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">{</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="148"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">try {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="149"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">return </span><span style="color: #0000BB">$handler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">handle</span><span style="color: #007700">(</span><span style="color: #0000BB">$request</span><span style="color: #007700">);</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="150"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">} catch (</span><span style="color: #0000BB">RedirectException $exception</span><span style="color: #007700">) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="151"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">return </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">handleRedirect</span><span style="color: #007700">(</span><span style="color: #0000BB">$exception</span><span style="color: #007700">);</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="152"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">} catch (</span><span style="color: #0000BB">Throwable $exception</span><span style="color: #007700">) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="153"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">return </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">handleException</span><span style="color: #007700">(</span><span style="color: #0000BB">$exception</span><span style="color: #007700">, </span><span style="color: #0000BB">$request</span><span style="color: #007700">);</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-24">Toggle Arguments</a>
+                    <div id="stack-args-0-24" class="stack-args" style="display: none;">
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0de35b2.06589939-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\ServerRequest</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">trustProxy</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+  <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">params</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;plugin&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;controller&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;action&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;pass&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">data</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;username&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;password&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">query</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">cookies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHPSESSID&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_environment</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_USER_AGENT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PostmanRuntime/7.37.3&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;*/*&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_POSTMAN_TOKEN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;19e974bd-007a-4a02-931a-f5bf30967e4a&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_HOST&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost:8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT_ENCODING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;gzip, deflate, br&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_CONNECTION&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;keep-alive&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_TYPE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;application/x-www-form-urlencoded&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_LENGTH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;29&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_COOKIE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PHPSESSID=1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PATH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SIGNATURE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&lt;address&gt;Apache/2.4.59 (Debian) Server at localhost Port 8080&lt;/address&gt;
+&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SOFTWARE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Apache/2.4.59 (Debian)&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;172.19.0.2&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;192.168.65.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_SCHEME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;http&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_PREFIX&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADMIN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;jeronimo@systemctl.es&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_FILENAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;52211&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_URL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;GATEWAY_INTERFACE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;CGI/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PROTOCOL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;QUERY_STRING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_URI&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHP_SELF&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME_FLOAT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(float)</span> <span class="cake-dbg-number">1714903260.9824</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1714903260</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argv&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argc&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">0</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ORIGINAL_REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">trustedProxies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectors</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;get&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;GET&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;post&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;put&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PUT&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;patch&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PATCH&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;delete&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;DELETE&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;head&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HEAD&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;OPTIONS&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ssl&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;https&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ajax&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP_X_REQUESTED_WITH&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;XMLHttpRequest&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;exclude&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;mobile&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0de35b2.06589939-1"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;tablet&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0de35b2.06589939-2"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectorCache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0de35b2.06589939-3"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\PhpInputStream</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">resource</span><span class="cake-dbg-punct"> =&gt; </span>(resource) Resource id #4</span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;php://input&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">cache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">reachedEof</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0de35b2.06589939-4"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0de35b2.06589939-5"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0de35b2.06589939-6"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">6</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_engine</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_started</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_lifetime</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1440</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_isCLI</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">headerSentInfo</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">flash</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0de35b2.06589939-7"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\FlashMessage</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">7</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_defaultConfig</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-ref"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) </span><a
+                                    class="cake-dbg-ref" href="#cake-db-object-663758e0de35b2.06589939-6">id:
+                                    6</a><span class="cake-dbg-punct"> {}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_config</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_configInitialized</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">true</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">attributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">emulatedAttributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;session&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;flash&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;webroot&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;base&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;params&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;here&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uploadedFiles</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">protocol</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">requestTarget</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-25" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-25" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        CORE/src/Http/Runner.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>82 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Cake\Error\Middleware\ErrorHandlerMiddleware-&gt;process </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/cakephp/src/Http/Runner.php&amp;line=82"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-25" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="78"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">if (</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">queue</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">valid</span><span style="color: #007700">()) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="79"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            $middleware </span><span style="color: #007700">= </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">queue</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">current</span><span style="color: #007700">();</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="80"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            $this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">queue</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">next</span><span style="color: #007700">();</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="81"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="82"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">return </span><span style="color: #0000BB">$middleware</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">process</span><span style="color: #007700">(</span><span style="color: #0000BB">$request</span><span style="color: #007700">, </span><span style="color: #0000BB">$this</span><span style="color: #007700">);</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="83"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="84"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="85"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">if (</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fallbackHandler</span><span style="color: #007700">) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="86"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">return </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fallbackHandler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">handle</span><span style="color: #007700">(</span><span style="color: #0000BB">$request</span><span style="color: #007700">);</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-25">Toggle Arguments</a>
+                    <div id="stack-args-0-25" class="stack-args" style="display: none;">
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0df53e5.36407771-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\ServerRequest</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">trustProxy</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+  <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">params</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;plugin&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;controller&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;action&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;pass&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">data</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;username&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;password&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">query</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">cookies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHPSESSID&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_environment</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_USER_AGENT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PostmanRuntime/7.37.3&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;*/*&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_POSTMAN_TOKEN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;19e974bd-007a-4a02-931a-f5bf30967e4a&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_HOST&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost:8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT_ENCODING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;gzip, deflate, br&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_CONNECTION&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;keep-alive&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_TYPE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;application/x-www-form-urlencoded&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_LENGTH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;29&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_COOKIE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PHPSESSID=1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PATH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SIGNATURE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&lt;address&gt;Apache/2.4.59 (Debian) Server at localhost Port 8080&lt;/address&gt;
+&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SOFTWARE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Apache/2.4.59 (Debian)&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;172.19.0.2&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;192.168.65.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_SCHEME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;http&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_PREFIX&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADMIN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;jeronimo@systemctl.es&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_FILENAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;52211&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_URL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;GATEWAY_INTERFACE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;CGI/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PROTOCOL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;QUERY_STRING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_URI&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHP_SELF&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME_FLOAT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(float)</span> <span class="cake-dbg-number">1714903260.9824</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1714903260</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argv&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argc&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">0</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ORIGINAL_REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">trustedProxies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectors</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;get&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;GET&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;post&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;put&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PUT&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;patch&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PATCH&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;delete&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;DELETE&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;head&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HEAD&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;OPTIONS&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ssl&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;https&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ajax&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP_X_REQUESTED_WITH&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;XMLHttpRequest&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;exclude&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;mobile&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0df53e5.36407771-1"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;tablet&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0df53e5.36407771-2"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectorCache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0df53e5.36407771-3"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\PhpInputStream</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">resource</span><span class="cake-dbg-punct"> =&gt; </span>(resource) Resource id #4</span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;php://input&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">cache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">reachedEof</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0df53e5.36407771-4"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0df53e5.36407771-5"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0df53e5.36407771-6"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">6</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_engine</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_started</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_lifetime</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1440</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_isCLI</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">headerSentInfo</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">flash</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0df53e5.36407771-7"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\FlashMessage</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">7</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_defaultConfig</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-ref"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) </span><a
+                                    class="cake-dbg-ref" href="#cake-db-object-663758e0df53e5.36407771-6">id:
+                                    6</a><span class="cake-dbg-punct"> {}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_config</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_configInitialized</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">true</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">attributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">emulatedAttributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;session&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;flash&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;webroot&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;base&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;params&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;here&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uploadedFiles</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">protocol</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">requestTarget</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0dfcf24.24296141-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Runner</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">queue</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dfcf24.24296141-1"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\MiddlewareQueue</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">position</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">6</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">queue</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">container</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dfcf24.24296141-2"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Core\Container</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">fallbackHandler</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dfcf24.24296141-3"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">App\Application</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">configDir</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/config/&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">plugins</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dfcf24.24296141-4"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Core\PluginCollection</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">controllerFactory</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">container</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-ref"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Core\Container</span><span class="cake-dbg-punct">) </span><a
+                                    class="cake-dbg-ref" href="#cake-db-object-663758e0dfcf24.24296141-2">id:
+                                    2</a><span class="cake-dbg-punct"> {}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_eventManager</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0dfcf24.24296141-5"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Event\EventManager</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_eventClass</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Cake\Event\Event&#039;</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-26" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-26" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        ROOT/vendor/cakephp/debug_kit/src/Middleware/DebugKitMiddleware.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>60 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Cake\Http\Runner-&gt;handle </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/debug_kit/src/Middleware/DebugKitMiddleware.php&amp;line=60"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-26" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="56"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">if (</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">service</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">isEnabled</span><span style="color: #007700">()) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="57"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            $this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">service</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">loadPanels</span><span style="color: #007700">();</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="58"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            $this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">service</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">initializePanels</span><span style="color: #007700">();</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="59"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="60"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">        $response </span><span style="color: #007700">= </span><span style="color: #0000BB">$handler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">handle</span><span style="color: #007700">(</span><span style="color: #0000BB">$request</span><span style="color: #007700">);</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="61"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="62"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">if (!</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">service</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">isEnabled</span><span style="color: #007700">()) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="63"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">return </span><span style="color: #0000BB">$response</span><span style="color: #007700">;</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="64"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-26">Toggle Arguments</a>
+                    <div id="stack-args-0-26" class="stack-args" style="display: none;">
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0e09fb4.43078704-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\ServerRequest</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">trustProxy</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+  <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">params</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;plugin&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;controller&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;action&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;pass&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">data</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;username&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;password&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">query</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">cookies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHPSESSID&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_environment</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_USER_AGENT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PostmanRuntime/7.37.3&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;*/*&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_POSTMAN_TOKEN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;19e974bd-007a-4a02-931a-f5bf30967e4a&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_HOST&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost:8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT_ENCODING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;gzip, deflate, br&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_CONNECTION&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;keep-alive&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_TYPE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;application/x-www-form-urlencoded&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_LENGTH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;29&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_COOKIE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PHPSESSID=1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PATH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SIGNATURE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&lt;address&gt;Apache/2.4.59 (Debian) Server at localhost Port 8080&lt;/address&gt;
+&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SOFTWARE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Apache/2.4.59 (Debian)&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;172.19.0.2&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;192.168.65.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_SCHEME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;http&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_PREFIX&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADMIN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;jeronimo@systemctl.es&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_FILENAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;52211&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_URL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;GATEWAY_INTERFACE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;CGI/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PROTOCOL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;QUERY_STRING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_URI&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHP_SELF&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME_FLOAT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(float)</span> <span class="cake-dbg-number">1714903260.9824</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1714903260</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argv&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argc&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">0</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ORIGINAL_REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">trustedProxies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectors</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;get&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;GET&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;post&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;put&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PUT&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;patch&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PATCH&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;delete&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;DELETE&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;head&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HEAD&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;OPTIONS&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ssl&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;https&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ajax&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP_X_REQUESTED_WITH&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;XMLHttpRequest&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;exclude&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;mobile&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e09fb4.43078704-1"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;tablet&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e09fb4.43078704-2"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectorCache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e09fb4.43078704-3"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\PhpInputStream</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">resource</span><span class="cake-dbg-punct"> =&gt; </span>(resource) Resource id #4</span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;php://input&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">cache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">reachedEof</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e09fb4.43078704-4"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e09fb4.43078704-5"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e09fb4.43078704-6"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">6</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_engine</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_started</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_lifetime</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1440</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_isCLI</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">headerSentInfo</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">flash</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e09fb4.43078704-7"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\FlashMessage</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">7</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_defaultConfig</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-ref"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) </span><a
+                                    class="cake-dbg-ref" href="#cake-db-object-663758e0e09fb4.43078704-6">id:
+                                    6</a><span class="cake-dbg-punct"> {}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_config</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_configInitialized</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">true</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">attributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">emulatedAttributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;session&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;flash&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;webroot&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;base&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;params&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;here&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uploadedFiles</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">protocol</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">requestTarget</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-27" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-27" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        CORE/src/Http/Runner.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>82 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        DebugKit\Middleware\DebugKitMiddleware-&gt;process </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/cakephp/src/Http/Runner.php&amp;line=82"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-27" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="78"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">if (</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">queue</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">valid</span><span style="color: #007700">()) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="79"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            $middleware </span><span style="color: #007700">= </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">queue</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">current</span><span style="color: #007700">();</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="80"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            $this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">queue</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">next</span><span style="color: #007700">();</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="81"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="82"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">return </span><span style="color: #0000BB">$middleware</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">process</span><span style="color: #007700">(</span><span style="color: #0000BB">$request</span><span style="color: #007700">, </span><span style="color: #0000BB">$this</span><span style="color: #007700">);</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="83"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="84"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="85"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">if (</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fallbackHandler</span><span style="color: #007700">) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="86"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">return </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fallbackHandler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">handle</span><span style="color: #007700">(</span><span style="color: #0000BB">$request</span><span style="color: #007700">);</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-27">Toggle Arguments</a>
+                    <div id="stack-args-0-27" class="stack-args" style="display: none;">
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0e17012.65685836-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\ServerRequest</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">trustProxy</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+  <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">params</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;plugin&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;controller&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;action&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;pass&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">data</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;username&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;password&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">query</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">cookies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHPSESSID&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_environment</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_USER_AGENT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PostmanRuntime/7.37.3&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;*/*&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_POSTMAN_TOKEN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;19e974bd-007a-4a02-931a-f5bf30967e4a&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_HOST&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost:8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT_ENCODING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;gzip, deflate, br&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_CONNECTION&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;keep-alive&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_TYPE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;application/x-www-form-urlencoded&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_LENGTH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;29&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_COOKIE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PHPSESSID=1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PATH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SIGNATURE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&lt;address&gt;Apache/2.4.59 (Debian) Server at localhost Port 8080&lt;/address&gt;
+&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SOFTWARE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Apache/2.4.59 (Debian)&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;172.19.0.2&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;192.168.65.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_SCHEME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;http&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_PREFIX&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADMIN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;jeronimo@systemctl.es&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_FILENAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;52211&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_URL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;GATEWAY_INTERFACE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;CGI/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PROTOCOL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;QUERY_STRING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_URI&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHP_SELF&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME_FLOAT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(float)</span> <span class="cake-dbg-number">1714903260.9824</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1714903260</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argv&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argc&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">0</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ORIGINAL_REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">trustedProxies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectors</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;get&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;GET&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;post&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;put&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PUT&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;patch&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PATCH&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;delete&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;DELETE&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;head&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HEAD&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;OPTIONS&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ssl&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;https&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ajax&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP_X_REQUESTED_WITH&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;XMLHttpRequest&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;exclude&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;mobile&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e17012.65685836-1"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;tablet&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e17012.65685836-2"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectorCache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e17012.65685836-3"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\PhpInputStream</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">resource</span><span class="cake-dbg-punct"> =&gt; </span>(resource) Resource id #4</span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;php://input&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">cache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">reachedEof</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e17012.65685836-4"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e17012.65685836-5"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e17012.65685836-6"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">6</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_engine</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_started</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_lifetime</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1440</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_isCLI</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">headerSentInfo</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">flash</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e17012.65685836-7"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\FlashMessage</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">7</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_defaultConfig</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-ref"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) </span><a
+                                    class="cake-dbg-ref" href="#cake-db-object-663758e0e17012.65685836-6">id:
+                                    6</a><span class="cake-dbg-punct"> {}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_config</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_configInitialized</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">true</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">attributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">emulatedAttributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;session&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;flash&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;webroot&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;base&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;params&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;here&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uploadedFiles</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">protocol</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">requestTarget</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0e1be62.33652751-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Runner</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">queue</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e1be62.33652751-1"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\MiddlewareQueue</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">position</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">6</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">queue</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">container</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e1be62.33652751-2"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Core\Container</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">fallbackHandler</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e1be62.33652751-3"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">App\Application</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">configDir</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/config/&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">plugins</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e1be62.33652751-4"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Core\PluginCollection</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">controllerFactory</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">container</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-ref"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Core\Container</span><span class="cake-dbg-punct">) </span><a
+                                    class="cake-dbg-ref" href="#cake-db-object-663758e0e1be62.33652751-2">id:
+                                    2</a><span class="cake-dbg-punct"> {}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_eventManager</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e1be62.33652751-5"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Event\EventManager</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_eventClass</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Cake\Event\Event&#039;</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-28" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-28" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        CORE/src/Http/Runner.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>67 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Cake\Http\Runner-&gt;handle </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/cakephp/src/Http/Runner.php&amp;line=67"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-28" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="63"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="64"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            Router</span><span style="color: #007700">::</span><span style="color: #0000BB">setRequest</span><span style="color: #007700">(</span><span style="color: #0000BB">$request</span><span style="color: #007700">);</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="65"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="66"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="67"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">return </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">handle</span><span style="color: #007700">(</span><span style="color: #0000BB">$request</span><span style="color: #007700">);</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="68"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="69"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="70"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #FF8000">/**</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="71"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">     </span><span style="color: #007700">* </span><span style="color: #0000BB">Handle incoming server request </span><span style="color: #007700">and return </span><span style="color: #0000BB">a response</span><span style="color: #007700">.</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-28">Toggle Arguments</a>
+                    <div id="stack-args-0-28" class="stack-args" style="display: none;">
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0e28020.64399280-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\ServerRequest</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">trustProxy</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+  <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">params</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;plugin&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;controller&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;action&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;pass&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">data</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;username&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;password&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">query</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">cookies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHPSESSID&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_environment</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_USER_AGENT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PostmanRuntime/7.37.3&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;*/*&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_POSTMAN_TOKEN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;19e974bd-007a-4a02-931a-f5bf30967e4a&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_HOST&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost:8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT_ENCODING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;gzip, deflate, br&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_CONNECTION&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;keep-alive&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_TYPE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;application/x-www-form-urlencoded&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_LENGTH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;29&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_COOKIE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PHPSESSID=1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PATH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SIGNATURE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&lt;address&gt;Apache/2.4.59 (Debian) Server at localhost Port 8080&lt;/address&gt;
+&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SOFTWARE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Apache/2.4.59 (Debian)&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;172.19.0.2&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;192.168.65.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_SCHEME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;http&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_PREFIX&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADMIN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;jeronimo@systemctl.es&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_FILENAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;52211&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_URL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;GATEWAY_INTERFACE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;CGI/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PROTOCOL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;QUERY_STRING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_URI&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHP_SELF&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME_FLOAT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(float)</span> <span class="cake-dbg-number">1714903260.9824</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1714903260</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argv&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argc&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">0</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ORIGINAL_REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">trustedProxies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectors</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;get&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;GET&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;post&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;put&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PUT&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;patch&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PATCH&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;delete&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;DELETE&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;head&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HEAD&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;OPTIONS&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ssl&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;https&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ajax&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP_X_REQUESTED_WITH&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;XMLHttpRequest&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;exclude&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;mobile&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e28020.64399280-1"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;tablet&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e28020.64399280-2"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectorCache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e28020.64399280-3"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\PhpInputStream</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">resource</span><span class="cake-dbg-punct"> =&gt; </span>(resource) Resource id #4</span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;php://input&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">cache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">reachedEof</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e28020.64399280-4"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e28020.64399280-5"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e28020.64399280-6"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">6</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_engine</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_started</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_lifetime</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1440</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_isCLI</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">headerSentInfo</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">flash</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e28020.64399280-7"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\FlashMessage</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">7</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_defaultConfig</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-ref"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) </span><a
+                                    class="cake-dbg-ref" href="#cake-db-object-663758e0e28020.64399280-6">id:
+                                    6</a><span class="cake-dbg-punct"> {}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_config</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_configInitialized</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">true</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">attributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">emulatedAttributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;session&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;flash&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;webroot&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;base&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;params&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;here&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uploadedFiles</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">protocol</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">requestTarget</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-29" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-29" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        CORE/src/Http/Server.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>99 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Cake\Http\Runner-&gt;run </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/cakephp/src/Http/Server.php&amp;line=99"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-29" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="95"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="96"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="97"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        $this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">dispatchEvent</span><span style="color: #007700">(</span><span style="color: #DD0000">'Server.buildMiddleware'</span><span style="color: #007700">, [</span><span style="color: #DD0000">'middleware' </span><span style="color: #007700">=&gt; </span><span style="color: #0000BB">$middleware</span><span style="color: #007700">]);</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="98"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="99"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">        $response </span><span style="color: #007700">= </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">runner</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">run</span><span style="color: #007700">(</span><span style="color: #0000BB">$middleware</span><span style="color: #007700">, </span><span style="color: #0000BB">$request</span><span style="color: #007700">, </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">app</span><span style="color: #007700">);</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="100"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="101"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">if (</span><span style="color: #0000BB">$request </span><span style="color: #007700">instanceof </span><span style="color: #0000BB">ServerRequest</span><span style="color: #007700">) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="102"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            $request</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getSession</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">close</span><span style="color: #007700">();</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="103"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">}</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-29">Toggle Arguments</a>
+                    <div id="stack-args-0-29" class="stack-args" style="display: none;">
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0e33026.07956716-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\MiddlewareQueue</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">position</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">6</span></span>
+  <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">queue</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e33026.07956716-1"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">DebugKit\Middleware\DebugKitMiddleware</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e33026.07956716-2"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Error\Middleware\ErrorHandlerMiddleware</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e33026.07956716-3"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Routing\Middleware\AssetMiddleware</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e33026.07956716-4"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Routing\Middleware\RoutingMiddleware</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e33026.07956716-5"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Middleware\BodyParserMiddleware</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e33026.07956716-6"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Authentication\Middleware\AuthenticationMiddleware</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">6</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">6</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e33026.07956716-7"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Middleware\CsrfProtectionMiddleware</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">7</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">container</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e33026.07956716-8"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Core\Container</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">8</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">defaultToShared</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">definitions</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e33026.07956716-9"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">League\Container\Definition\DefinitionAggregate</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">9</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">providers</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e33026.07956716-10"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">League\Container\ServiceProvider\ServiceProviderAggregate</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">10</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">inflectors</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e33026.07956716-11"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">League\Container\Inflector\InflectorAggregate</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">11</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">delegates</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0e367d8.68575756-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\ServerRequest</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-property">trustProxy</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+  <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">params</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;plugin&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;controller&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;action&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;pass&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">data</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;username&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;password&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;admin&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">query</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">cookies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHPSESSID&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_environment</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_STATUS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;200&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_USER_AGENT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PostmanRuntime/7.37.3&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;*/*&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_POSTMAN_TOKEN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;19e974bd-007a-4a02-931a-f5bf30967e4a&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_HOST&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost:8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_ACCEPT_ENCODING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;gzip, deflate, br&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_CONNECTION&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;keep-alive&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_TYPE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;application/x-www-form-urlencoded&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTENT_LENGTH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;29&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTP_COOKIE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PHPSESSID=1329b7f71a4d03cf4fab3e20e22ce58d&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PATH&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SIGNATURE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&lt;address&gt;Apache/2.4.59 (Debian) Server at localhost Port 8080&lt;/address&gt;
+&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_SOFTWARE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Apache/2.4.59 (Debian)&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;localhost&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;172.19.0.2&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;8080&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_ADDR&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;192.168.65.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_SCHEME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;http&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_PREFIX&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;CONTEXT_DOCUMENT_ROOT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_ADMIN&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;jeronimo@systemctl.es&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_FILENAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REMOTE_PORT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;52211&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REDIRECT_URL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;GATEWAY_INTERFACE&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;CGI/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SERVER_PROTOCOL&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP/1.1&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;QUERY_STRING&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_URI&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/api/token/login&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;SCRIPT_NAME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;PHP_SELF&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/webroot/index.php&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME_FLOAT&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(float)</span> <span class="cake-dbg-number">1714903260.9824</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;REQUEST_TIME&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1714903260</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argv&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;argc&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">0</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ORIGINAL_REQUEST_METHOD&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">trustedProxies</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectors</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;get&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;GET&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;post&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;POST&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;put&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PUT&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;patch&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;PATCH&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;delete&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;DELETE&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;head&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HEAD&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;REQUEST_METHOD&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;OPTIONS&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ssl&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;https&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTPS&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;options&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;ajax&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;env&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;HTTP_X_REQUESTED_WITH&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;XMLHttpRequest&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;json&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;accept&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;exclude&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+        <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;param&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;_ext&#039;</span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;value&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;xml&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;mobile&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e367d8.68575756-1"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span>
+                                <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;tablet&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e367d8.68575756-2"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_detectorCache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e367d8.68575756-3"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\PhpInputStream</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">resource</span><span class="cake-dbg-punct"> =&gt; </span>(resource) Resource id #4</span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">stream</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;php://input&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">cache</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">reachedEof</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e367d8.68575756-4"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">base</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">webroot</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/&#039;</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">private</span> <span class="cake-dbg-property">uri</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e367d8.68575756-5"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Laminas\Diactoros\Uri</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e367d8.68575756-6"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">6</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_engine</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_started</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_lifetime</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1440</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_isCLI</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">headerSentInfo</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">flash</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e367d8.68575756-7"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\FlashMessage</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">7</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">_defaultConfig</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">session</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-ref"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Http\Session</span><span class="cake-dbg-punct">) </span><a
+                                    class="cake-dbg-ref" href="#cake-db-object-663758e0e367d8.68575756-6">id:
+                                    6</a><span class="cake-dbg-punct"> {}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_config</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_configInitialized</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">true</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">attributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">emulatedAttributes</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;session&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;flash&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;webroot&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;base&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;params&#039;</span><span class="cake-dbg-punct">,</span></span>
+    <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;here&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">uploadedFiles</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items"></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">protocol</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">requestTarget</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0e3b6e3.81781543-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">App\Application</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+  <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">configDir</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;/var/www/config/&#039;</span></span>
+  <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">plugins</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e3b6e3.81781543-1"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Core\PluginCollection</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">1</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">plugins</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">names</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">positions</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">loopDepth</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span>
+                                <span class="cake-dbg-number">-1</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">controllerFactory</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">container</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e3b6e3.81781543-2"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Core\Container</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">2</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">defaultToShared</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+    <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span> <span class="cake-dbg-property">definitions</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e3b6e3.81781543-3"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">League\Container\Definition\DefinitionAggregate</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">providers</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e3b6e3.81781543-4"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">League\Container\ServiceProvider\ServiceProviderAggregate</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">4</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">inflectors</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e3b6e3.81781543-5"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">League\Container\Inflector\InflectorAggregate</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">5</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">delegates</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-special">[maximum depth reached]</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_eventManager</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-object" id="cake-db-object-663758e0e3b6e3.81781543-6"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Cake\Event\EventManager</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">6</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props">
+    <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;_listeners&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;Error.beforeRender&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;1 listener(s)&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;Controller.shutdown&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;16 listener(s)&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;Controller.initialize&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;3 listener(s)&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;Controller.startup&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;3 listener(s)&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;Controller.beforeRender&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;4 listener(s)&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;View.beforeRender&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;2 listener(s)&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;View.afterRender&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;2 listener(s)&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;View.beforeLayout&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;2 listener(s)&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;View.afterLayout&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;2 listener(s)&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;View.beforeRenderFile&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;1 listener(s)&#039;</span><span class="cake-dbg-punct">,</span></span>
+      <span class="cake-dbg-array-item"><span class="cake-dbg-string">&#039;View.afterRenderFile&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;1 listener(s)&#039;</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;_isGlobal&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">true</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;_trackEvents&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;_generalManager&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;(object) EventManager&#039;</span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-property">&#039;_dispatchedEvents&#039;</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">null</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span></span>
+                                <span class="cake-dbg-prop"><span class="cake-dbg-visibility">protected</span>
+                                <span class="cake-dbg-property">_eventClass</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-string">&#039;Cake\Event\Event&#039;</span></span></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-30" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-30" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        ROOT/webroot/index.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>40 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Cake\Http\Server-&gt;run </span>
+
+                        <a href="phpstorm://open?file=/var/www/webroot/index.php&amp;line=40"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-30" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="36"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span><span style="color: #FF8000">// Bind your application to the server.</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="37"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">$server </span><span style="color: #007700">= new </span><span style="color: #0000BB">Server</span><span style="color: #007700">(new </span><span style="color: #0000BB">Application</span><span style="color: #007700">(</span><span style="color: #0000BB">dirname</span><span style="color: #007700">(</span><span style="color: #0000BB">__DIR__</span><span style="color: #007700">) . </span><span style="color: #DD0000">'/config'</span><span style="color: #007700">));</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="38"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="39"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span><span style="color: #FF8000">// Run the request/response through the application and emit the response.</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="40"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">$server</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">emit</span><span style="color: #007700">(</span><span style="color: #0000BB">$server</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">run</span><span style="color: #007700">());</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="41"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-30">Toggle Arguments</a>
+                    <div id="stack-args-0-30" class="stack-args" style="display: none;">
+                        <div class="cake-debug">No arguments</div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-0-31" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="0-31" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        [main]                    </span>
+
+
+                        <span class="stack-function">
+                                                                    </span>
+
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-0-31" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-0-31">Toggle Arguments</a>
+                    <div id="stack-args-0-31" class="stack-args" style="display: none;">
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <div class="stack-exception-header">
+            <span class="stack-exception-caused">Caused by</span>
+            <span class="stack-exception-message">SQLSTATE[08006] [7] could not translate host name &quot;postgres&quot; to address: Name or service not known</span>
+            <span class="stack-exception-type">PDOException</span>
+        </div>
+
+        <div class="stack-frame">
+            <span class="stack-frame-file">
+            CORE/src/Database/Driver.php at line 132        </span>
+            <a href="phpstorm://open?file=/var/www/vendor/cakephp/cakephp/src/Database/Driver.php&amp;line=132"
+                class="stack-frame-edit">(edit)</a>
+            <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td class="excerpt-number" data-number="128"></td>
+                    <td class="excerpt-line">
+                        <pre><code style="color: #000000"><span style="color: #0000BB">     </span><span style="color: #007700">*/</span></code></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="excerpt-number" data-number="129"></td>
+                    <td class="excerpt-line">
+                        <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">protected function </span><span style="color: #0000BB">_connect</span><span style="color: #007700">(</span><span style="color: #0000BB">string $dsn</span><span style="color: #007700">, array </span><span style="color: #0000BB">$config</span><span style="color: #007700">): </span><span style="color: #0000BB">bool</span></code></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="excerpt-number" data-number="130"></td>
+                    <td class="excerpt-line">
+                        <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">{</span></code></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="excerpt-number" data-number="131"></td>
+                    <td class="excerpt-line">
+                        <pre><code style="color: #000000"><span style="color: #0000BB">        $action </span><span style="color: #007700">= function () use (</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">, </span><span style="color: #0000BB">$config</span><span style="color: #007700">) {</span></code></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="excerpt-number" data-number="132"></td>
+                    <td class="excerpt-line">
+                        <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">            $this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setConnection</span><span style="color: #007700">(new </span><span style="color: #0000BB">PDO</span><span style="color: #007700">(</span></code>
+                        </pre></span></td>
+                </tr>
+                <tr>
+                    <td class="excerpt-number" data-number="133"></td>
+                    <td class="excerpt-line">
+                        <pre><code style="color: #000000"><span style="color: #0000BB">                $dsn</span><span style="color: #007700">,</span></code></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="excerpt-number" data-number="134"></td>
+                    <td class="excerpt-line">
+                        <pre><code style="color: #000000"><span style="color: #0000BB">                $config</span><span style="color: #007700">[</span><span style="color: #DD0000">'username'</span><span style="color: #007700">] ?: </span><span style="color: #0000BB">null</span><span style="color: #007700">,</span></code></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="excerpt-number" data-number="135"></td>
+                    <td class="excerpt-line">
+                        <pre><code style="color: #000000"><span style="color: #0000BB">                $config</span><span style="color: #007700">[</span><span style="color: #DD0000">'password'</span><span style="color: #007700">] ?: </span><span style="color: #0000BB">null</span><span style="color: #007700">,</span></code></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="excerpt-number" data-number="136"></td>
+                    <td class="excerpt-line">
+                        <pre><code style="color: #000000"><span style="color: #0000BB">                $config</span><span style="color: #007700">[</span><span style="color: #DD0000">'flags'</span><span style="color: #007700">]</span></code></pre>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <ul class="stack-frames">
+            <li id="stack-frame-1-0" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="1-0" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        CORE/src/Database/Driver.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>132 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        PDO-&gt;__construct </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/cakephp/src/Database/Driver.php&amp;line=132"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-1-0" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="128"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">     </span><span style="color: #007700">*/</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="129"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">protected function </span><span style="color: #0000BB">_connect</span><span style="color: #007700">(</span><span style="color: #0000BB">string $dsn</span><span style="color: #007700">, array </span><span style="color: #0000BB">$config</span><span style="color: #007700">): </span><span style="color: #0000BB">bool</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="130"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">{</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="131"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        $action </span><span style="color: #007700">= function () use (</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">, </span><span style="color: #0000BB">$config</span><span style="color: #007700">) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="132"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">            $this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setConnection</span><span style="color: #007700">(new </span><span style="color: #0000BB">PDO</span><span style="color: #007700">(</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="133"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">                $dsn</span><span style="color: #007700">,</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="134"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">                $config</span><span style="color: #007700">[</span><span style="color: #DD0000">'username'</span><span style="color: #007700">] ?: </span><span style="color: #0000BB">null</span><span style="color: #007700">,</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="135"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">                $config</span><span style="color: #007700">[</span><span style="color: #DD0000">'password'</span><span style="color: #007700">] ?: </span><span style="color: #0000BB">null</span><span style="color: #007700">,</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="136"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">                $config</span><span style="color: #007700">[</span><span style="color: #DD0000">'flags'</span><span style="color: #007700">]</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-1-0">Toggle Arguments</a>
+                    <div id="stack-args-1-0" class="stack-args" style="display: none;">
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-string">&#039;pgsql:host=postgres;port=5432;dbname=TMZ&#039;</span>
+                            </div>
+                        </div>
+                        <div class="cake-debug">
+                            <div class="cake-dbg"><span class="cake-dbg-string">&#039;TMZAPP&#039;</span></div>
+                        </div>
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0e4c8f6.92423769-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">SensitiveParameterValue</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-array"><span class="cake-dbg-punct">[</span><samp class="cake-dbg-array-items">
+  <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">12</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span><span class="cake-dbg-punct">,</span></span>
+  <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">20</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-const">false</span><span class="cake-dbg-punct">,</span></span>
+  <span class="cake-dbg-array-item"><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">3</span><span class="cake-dbg-punct"> =&gt; </span><span class="cake-dbg-visibility">(int)</span> <span class="cake-dbg-number">2</span><span class="cake-dbg-punct">,</span></span></samp>
+                                <span class="cake-dbg-punct">]</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-1-1" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="1-1" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        CORE/src/Core/Retry/CommandRetry.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>70 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Cake\Database\Driver-&gt;Cake\Database\{closure} </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/cakephp/src/Core/Retry/CommandRetry.php&amp;line=70"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-1-1" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="66"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">    </span><span style="color: #007700">{</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="67"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        $this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">numRetries </span><span style="color: #007700">= </span><span style="color: #0000BB">0</span><span style="color: #007700">;</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="68"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">while (</span><span style="color: #0000BB">true</span><span style="color: #007700">) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="69"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">try {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="70"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">                </span><span style="color: #007700">return </span><span style="color: #0000BB">$action</span><span style="color: #007700">();</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="71"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">} catch (</span><span style="color: #0000BB">Exception $e</span><span style="color: #007700">) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="72"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">                </span><span style="color: #007700">if (</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="73"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">                    $this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">numRetries </span><span style="color: #007700">&lt; </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">maxRetries </span><span style="color: #007700">&amp;&amp;</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="74"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">                    $this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">strategy</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">shouldRetry</span><span style="color: #007700">(</span><span style="color: #0000BB">$e</span><span style="color: #007700">, </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">numRetries</span><span style="color: #007700">)</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-1-1">Toggle Arguments</a>
+                    <div id="stack-args-1-1" class="stack-args" style="display: none;">
+                        <div class="cake-debug">No arguments</div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-1-2" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="1-2" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        CORE/src/Database/Driver.php                    </span>
+
+                        <span class="stack-frame-line">
+                            <span class="stack-frame-label">at line</span>142 </span>
+
+                        <span class="stack-function">
+                                                    <span class="stack-frame-label">in</span>
+                        Cake\Core\Retry\CommandRetry-&gt;run </span>
+
+                        <a href="phpstorm://open?file=/var/www/vendor/cakephp/cakephp/src/Database/Driver.php&amp;line=142"
+                            class="stack-frame-edit">(edit)</a>
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-1-2" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="excerpt-number" data-number="138"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">};</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="139"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB"></span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="140"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        $retry </span><span style="color: #007700">= new </span><span style="color: #0000BB">CommandRetry</span><span style="color: #007700">(new </span><span style="color: #0000BB">ErrorCodeWaitStrategy</span><span style="color: #007700">(static::</span><span style="color: #0000BB">RETRY_ERROR_CODES</span><span style="color: #007700">, </span><span style="color: #0000BB">5</span><span style="color: #007700">), </span><span style="color: #0000BB">4</span><span style="color: #007700">);</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="141"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">try {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="142"></td>
+                            <td class="excerpt-line">
+                                <span class="code-highlight"><pre><code style="color: #000000"><span style="color: #0000BB">            $retry</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">run</span><span style="color: #007700">(</span><span style="color: #0000BB">$action</span><span style="color: #007700">);</span></code>
+                                </pre></span></td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="143"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">        </span><span style="color: #007700">} catch (</span><span style="color: #0000BB">PDOException $e</span><span style="color: #007700">) {</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="144"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">            </span><span style="color: #007700">throw new </span><span style="color: #0000BB">MissingConnectionException</span><span style="color: #007700">(</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="145"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">                </span><span style="color: #007700">[</span></code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="excerpt-number" data-number="146"></td>
+                            <td class="excerpt-line">
+                                <pre><code style="color: #000000"><span style="color: #0000BB">                    </span><span style="color: #DD0000">'driver' </span><span style="color: #007700">=&gt; </span><span style="color: #0000BB">App</span><span style="color: #007700">::</span><span style="color: #0000BB">shortName</span><span style="color: #007700">(static::class, </span><span style="color: #DD0000">'Database/Driver'</span><span style="color: #007700">),</span></code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-1-2">Toggle Arguments</a>
+                    <div id="stack-args-1-2" class="stack-args" style="display: none;">
+                        <div class="cake-debug">
+                            <div class="cake-dbg">
+                                <span class="cake-dbg-object" id="cake-db-object-663758e0e5e464.24788303-0"><span class="cake-dbg-punct">object(</span><span class="cake-dbg-class">Closure</span><span class="cake-dbg-punct">) id:</span><span class="cake-dbg-number">0</span><span class="cake-dbg-punct"> {</span><samp class="cake-dbg-object-props"></samp>
+                                <span class="cake-dbg-punct">}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="stack-frame-1-3" class="stack-frame vendor-frame">
+                <div class="stack-frame-header">
+                    <button data-frame-id="1-3" class="stack-frame-toggle">
+                    &#x25BC;
+                </button>
+
+                    <div class="stack-frame-header-content">
+                        <span class="stack-frame-file">
+                        [main]                    </span>
+
+
+                        <span class="stack-function">
+                                                                    </span>
+
+                    </div>
+                </div>
+                <div class="stack-frame-contents" id="stack-frame-details-1-3" style="display: none">
+                    <table class="code-excerpt" cellspacing="0" cellpadding="0">
+                    </table>
+
+                    <a href="#" class="stack-frame-args" data-target="stack-args-1-3">Toggle Arguments</a>
+                    <div id="stack-args-1-3" class="stack-args" style="display: none;">
+                    </div>
+                </div>
+            </li>
+        </ul>
+
+        <p class="customize">
+            If you want to customize this error message, create
+            <em>templates/Error/missing_connection.php</em>
+        </p>
+    </div>
+
+    <script type="text/javascript">
+        function bindEvent(selector, eventName, listener) {
+            var els = document.querySelectorAll(selector);
+            for (var i = 0, len = els.length; i < len; i++) {
+                els[i].addEventListener(eventName, listener, false);
+            }
+        }
+
+        function toggleElement(el) {
+            if (el.style.display === 'none') {
+                el.style.display = 'block';
+            } else {
+                el.style.display = 'none';
+            }
+        }
+
+        function each(els, cb) {
+            var i, len;
+            for (i = 0, len = els.length; i < len; i++) {
+                cb(els[i], i);
+            }
+        }
+
+        window.addEventListener('load', function() {
+            bindEvent('.stack-frame-args', 'click', function(event) {
+                var target = this.dataset['target'];
+                var el = document.getElementById(target);
+                toggleElement(el);
+                event.preventDefault();
+            });
+
+            var details = document.querySelectorAll('.stack-details');
+            var frames = document.querySelectorAll('.stack-frame');
+            bindEvent('.stack-frame-toggle', 'click', function(event) {
+                this.classList.toggle('active');
+
+                var frameId = this.dataset.frameId;
+                var frame = document.getElementById('stack-frame-details-' + frameId);
+                toggleElement(frame);
+                event.preventDefault();
+            });
+
+            bindEvent('.header-title a', 'click', function(event) {
+                event.preventDefault();
+                var text = '';
+                each(this.parentNode.childNodes, function(el) {
+                    if (el.nodeName !== 'A') {
+                        text += el.textContent.trim();
+                    }
+                });
+
+                // Use execCommand(copy) as it has the widest support.
+                var textArea = document.createElement("textarea");
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                var el = this;
+                try {
+                    document.execCommand('copy');
+
+                    // Show a success icon and then revert
+                    var original = el.innerText;
+                    el.innerText = '\ud83c\udf70';
+                    setTimeout(function () {
+                        el.innerText =  original;
+                    }, 1000);
+                } catch (err) {
+                    alert('Unable to update clipboard ' + err);
+                }
+                document.body.removeChild(textArea);
+                this.parentNode.parentNode.scrollIntoView(true);
+            });
+        });
+    </script>
+    <script id="__debug_kit_script" data-id="335d98af-ed8e-4051-8d9e-cae27ead6e93" data-url="http://localhost:8080/"
+        type="module" src="/debug_kit/js/inject-iframe.js?1702673945"></script>
+</body>
+
+</html>
 </html>

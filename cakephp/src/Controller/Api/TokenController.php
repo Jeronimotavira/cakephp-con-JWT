@@ -55,7 +55,10 @@ class TokenController extends AppController
             ];
             $json = [
                 'token' => JWT::encode($payload, $privateKey, 'RS256'),
-            ];
+                'data' => $result->getData(),
+            ]; 
+          // $json = $result->getData();
+           // $json = $this->request->getData();
         } else {
             $this->response = $this->response->withStatus(401);
             $json = $this->request->getData();

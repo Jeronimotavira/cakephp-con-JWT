@@ -139,27 +139,19 @@ class Application extends BaseApplication
             'queryParam' => 'redirect',
         ]);
   
-    
-        $service->loadIdentifier('Authentication.Password', [
-            'fields' => [
-                'username' => 'username',
-                'password' => 'password',
-            ]
-        ]);
-
-     
-        $service->loadAuthenticator('Authentication.Session');
-        // Configure form data check to pick email and password
-        $service->loadAuthenticator('Authentication.Form', [
+        $fielSeting = [
             'fields' => [
                 'username' => 'username',
                 'password' => 'password',
             ],
-            'loginUrl' => '/users/login',
-        ]);
-        return  $service;
+            
+        ];
+        $service->loadAuthenticator('Authentication.Form', $fielSeting);
+        $service->loadIdentifier('Authentication.Password', $fielSeting);
+
+        
        
-     /*     if ($request->getParam('prefix') == 'Api') {
+        if ($request->getParam('prefix') == 'Api') {
         
             // ...
             $service->loadIdentifier('Authentication.JwtSubject');
@@ -171,10 +163,11 @@ class Application extends BaseApplication
            
         } else {
         
+            $service->loadAuthenticator('Authentication.Session');
 
-        } */
+        } 
  
-        
+        return  $service;
     
        
     }
