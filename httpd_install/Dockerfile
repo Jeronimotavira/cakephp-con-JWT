@@ -39,4 +39,5 @@ EXPOSE 80 443
 
 
 #CMD ["apachectl", "-k", "start", "-DFOREGROUND"]
-#ENTRYPOINT [ "/bin/bash" ] 
+# Comando de inicio
+ENTRYPOINT [ "/bin/bash", "-c", "composer install --no-interaction --no-dev" ]

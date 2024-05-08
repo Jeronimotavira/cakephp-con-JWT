@@ -16,7 +16,9 @@ services:
   postgrescake4:
     image: postgres
     container_name: ${POSTGRES_CNAME}
-    restart: always
+  #  restart: always
+  #  volumes:
+  #    - ./postgres-data:/var/lib/postgresql/data
     ports:
       - '5432:5432' 
     environment:
